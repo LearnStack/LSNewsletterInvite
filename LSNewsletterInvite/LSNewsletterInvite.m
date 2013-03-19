@@ -520,6 +520,7 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
             CGFloat margins = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? 60 : 20;
             self.subscribeButton.frame = CGRectMake(((tableView.frame.size.width - margins) - submitButtonImage.size.width) / 2,
                                             0, submitButtonImage.size.width, submitButtonImage.size.height);
+            [self.subscribeButton addTarget:self action:@selector(subscribe) forControlEvents:UIControlEventTouchUpInside];
             [cell.contentView addSubview:self.subscribeButton];
             
             cell.backgroundColor = [UIColor clearColor];
