@@ -40,4 +40,10 @@ License
 Copyright 2013 [LearnStack]
 This library is distributed under the terms of MIT/X11
 
+Known Issues
+============
+- Doesn't work in Landscape
+- Using the template style header file makes using LSNewsletterInvite as a submodule difficult (we're open to ideas)
+
+
 [LearnStack]: http://learnstack.com
