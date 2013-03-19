@@ -625,13 +625,15 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
     
     NSString *group = NewsletterMailchimpGroup;
     if([group length] > 0) {
+        
         NSMutableArray *groupings = [NSArray arrayWithObject:[NSDictionary dictionaryWithObjectsAndKeys:
-                                                              NewsletterMailchimpGroup, @"group",
                                                               NewsletterMailchimpGroupName, @"name",
+                                                              NewsletterMailchimpGroup, @"groups",
                                                               nil]];
         [mergeVars setValue:groupings forKey:@"GROUPINGS"];
-    }
+    }    
     
+    [params setValue:[NSNumber numberWithBool:NewsletterMailchimpDoubleOptIn] forKey:@"double_optin"];    
     [params setValue:mergeVars forKey:@"merge_vars"];
     
     ChimpKit *ck = [[ChimpKit alloc] initWithDelegate:self andApiKey:NewsletterMailchimpKey];

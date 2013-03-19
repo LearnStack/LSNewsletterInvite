@@ -31,8 +31,15 @@
 
 #define NewsletterMailchimpKey @""
 #define NewsletterMailchimpListId @""
-#define NewsletterMailchimpGroup @""
+
+// This one always gives grief. Make sure the group name is the top level grouping.
+
 #define NewsletterMailchimpGroupName @""
+#define NewsletterMailchimpGroup @""
+
+// This allows you to disable Double Opt In, so they don't have to confirm that they really signed up
+
+#define NewsletterMailchimpDoubleOptIn NO
 
 /*
  The title of your invite, including font sizes for iPhone and iPad
