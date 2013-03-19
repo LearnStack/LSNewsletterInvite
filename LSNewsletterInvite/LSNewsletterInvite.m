@@ -226,7 +226,7 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
 }
 
 - (void)updateChrome {
-    NSString *email = [self.emailTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    NSString *email = [[self.emailTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] lowercaseString];
     if([[NSPredicate predicateWithFormat:@"SELF MATCHES %@", kEmailRegex]
         evaluateWithObject:email]) {
 
