@@ -199,6 +199,15 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
     self.nameTextField.textColor = RGBCOLOR(50, 79, 133);
     self.nameTextField.delegate = self;
     
+    // The invite count is incremented when you initialize and present with the class method, and when you initialize and present your own.
+    
+    NSInteger inviteCount = [[NSUserDefaults standardUserDefaults] integerForKey:kNewsletterInviteCountKey];
+    inviteCount++;
+    
+    [[NSUserDefaults standardUserDefaults] setInteger:inviteCount forKey:kNewsletterInviteCountKey];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+
+    
     // The submit/subscribe button is dynamically updated to work only when their is an email in the email textfield
     
     [self updateChrome];
@@ -209,20 +218,6 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
     
     self.emailTextField = nil;
     self.nameTextField = nil;
-}
-
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    
-    // [self.emailTextField becomeFirstResponder];
-
-    // The invite count is incremented when you initialize and present with the class method, and when you initialize and present your own.
-    
-    NSInteger inviteCount = [[NSUserDefaults standardUserDefaults] integerForKey:kNewsletterInviteCountKey];
-    inviteCount++;
-    
-    [[NSUserDefaults standardUserDefaults] setInteger:inviteCount forKey:kNewsletterInviteCountKey];
-    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 - (void)updateChrome {
