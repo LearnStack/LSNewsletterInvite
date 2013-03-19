@@ -29,7 +29,7 @@ Getting Started
 2. Add ChimpKit and SVProgressHUD libraries to your project
 3. Link your apps binary with the QuartzCore framework (this is for SVProgressHUD
 4. Add your MailChimp key and List ID in the LSNewsletterInvite.h file 
-5. Call `[LSNewsletterInvite appLaunched:YES viewConroller:__YOUR_VIEW_CONTROLLER__]` in your app delegates `applicationWillEnterForeground:` method. The viewController is provided for the Invite to be presented.
+5. Call `[LSNewsletterInvite appLaunched:YES viewConroller:__YOUR_VIEW_CONTROLLER__]` in your app delegates `didFinishLaunchingWithOptions:` method. The viewController is provided for the Invite to be presented.
 
 The tool is made for easy customization. You can add custom images, as well as custom text to each of the fields.
 
