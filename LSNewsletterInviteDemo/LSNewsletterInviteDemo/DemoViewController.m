@@ -44,7 +44,7 @@
     newsletterInvite.settings = settings;
 
     /* If you wanted to localize LSNewsletterInvite you could update the settings like this
-     Copy the strings file from 
+     Copy the strings file from https://gist.github.com/LearnStack/5499179
     
      settings.title = NSLocalizedStringFromTable(@"InviteTitle", @"LSNewsletter", nil);
      settings.firstCopy = NSLocalizedStringFromTable(@"InviteFirstCopy", @"LSNewsletter", nil);

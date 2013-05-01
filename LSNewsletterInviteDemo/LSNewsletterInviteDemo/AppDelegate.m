@@ -7,6 +7,7 @@
 
 #import "AppDelegate.h"
 #import "DemoViewController.h"
+#import "LSNewsletterInviteSettings.h"
 #import "LSNewsletterInvite.h"
 
 @implementation AppDelegate
@@ -20,10 +21,16 @@
     self.window.rootViewController = demoViewController;
     
     /*
-     You can use this single line implementation and it will track invite and launch count for you.
+     You can update the settings from here without changing the code.
      */
     
-    [LSNewsletterInvite appLaunched:YES viewController:demoViewController andSettings:nil];
+    LSNewsletterInviteSettings * settings = [[LSNewsletterInviteSettings alloc] init];
+    
+    /*
+     You can use this single line implementation and it will track invite and launch count for you.
+     */
+
+    [LSNewsletterInvite appLaunched:YES viewController:demoViewController andSettings:settings];
 
     [self.window makeKeyAndVisible];
     return YES;
