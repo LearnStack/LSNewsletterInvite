@@ -28,12 +28,19 @@ Getting Started
 1. Add the LSNewsletterInvite code (directory) to your project
 2. Add ChimpKit and SVProgressHUD libraries to your project
 3. Link your apps binary with the QuartzCore framework (this is for SVProgressHUD
-4. Add your MailChimp key and List ID in the LSNewsletterInvite.h file 
-5. Call `[LSNewsletterInvite appLaunched:YES viewConroller:__YOUR_VIEW_CONTROLLER__]` in your app delegates `didFinishLaunchingWithOptions:` method. The viewController is provided for the Invite to be presented.
+4. Add a dictionary with the key "MailChimp" to your app info.plist file with the following settings:
+     "MailChimpAPIKey" : "YOUR_API_KEY"
+     "MailChimpListID" : "YOUR_LIST_ID"
+5. Call `[LSNewsletterInvite appLaunched:YES viewConroller:__YOUR_VIEW_CONTROLLER__ andSettings:nil]` in your app delegates `didFinishLaunchingWithOptions:` method. The viewController is provided for the Invite to be presented.
 
 The tool is made for easy customization. You can add custom images, as well as custom text to each of the fields.
 
 You also have the option to manually initialize and present LSNewsletterInvite. An example of this is in the demo projected included with the library.
+
+Better Settings
+===============
+
+As of version 0.6 the settings of the view controller can be updated by creating an instance of LSNewsletterInviteSettings and updating the properties of that object, then assigning it in the 'appLaunched' method or as the 'settings' property of an LSNewsletterInvite object you initialized yourself.
 
 License
 =======
@@ -43,7 +50,5 @@ This library is distributed under the terms of MIT/X11
 Known Issues
 ============
 - Doesn't work in Landscape
-- Using the template style header file makes using LSNewsletterInvite as a submodule difficult (we're open to ideas)
-
 
 [LearnStack]: http://learnstack.com
