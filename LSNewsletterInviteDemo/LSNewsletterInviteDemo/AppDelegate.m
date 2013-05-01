@@ -23,7 +23,7 @@
      You can use this single line implementation and it will track invite and launch count for you.
      */
     
-    [LSNewsletterInvite appLaunched:YES viewController:demoViewController];
+    [LSNewsletterInvite appLaunched:YES viewController:demoViewController andSettings:nil];
 
     [self.window makeKeyAndVisible];
     return YES;

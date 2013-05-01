@@ -39,6 +39,22 @@
 	<string>0.5.2</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>MailChimp</key>
+	<dict>
+		<key>MailChimpAPIKey</key>
+		<string>YOUR_API_KEY_HERE</string>
+		<key>MailChimpGroups</key>
+		<array>
+			<dict>
+				<key>groups</key>
+				<string>*optional* INSERT_SPECIFIC_GROUP_HERE (i.e. specific application)</string>
+				<key>name</key>
+				<string>*optional* TOP_LEVEL_GROUP_NAME (i.e. iOS applications)</string>
+			</dict>
+		</array>
+		<key>MailChimpListID</key>
+		<string>YOUR_LIST_ID_HERE</string>
+	</dict>
 	<key>UIPrerenderedIcon</key>
 	<true/>
 	<key>UIRequiredDeviceCapabilities</key>

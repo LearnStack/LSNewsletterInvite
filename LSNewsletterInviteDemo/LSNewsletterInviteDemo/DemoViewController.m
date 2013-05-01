@@ -7,6 +7,7 @@
 
 #import "DemoViewController.h"
 #import "LSNewsletterInvite.h"
+#import "LSNewsletterInviteSettings.h"
 
 @interface DemoViewController () <LSNewsletterInviteDelegate>
 
@@ -38,6 +39,19 @@
     
     LSNewsletterInvite * newsletterInvite = [[LSNewsletterInvite alloc] init];
     newsletterInvite.delegate = self;
+    
+    LSNewsletterInviteSettings * settings = [[LSNewsletterInviteSettings alloc] init];
+    newsletterInvite.settings = settings;
+
+    /* If you wanted to localize LSNewsletterInvite you could update the settings like this
+     Copy the strings file from 
+    
+     settings.title = NSLocalizedStringFromTable(@"InviteTitle", @"LSNewsletter", nil);
+     settings.firstCopy = NSLocalizedStringFromTable(@"InviteFirstCopy", @"LSNewsletter", nil);
+     settings.secondCopy = NSLocalizedStringFromTable(@"InviteSecondCopy", @"LSNewsletter", nil);
+     
+     */
+    
     [self presentNewsletterInvite:newsletterInvite];
 
 }

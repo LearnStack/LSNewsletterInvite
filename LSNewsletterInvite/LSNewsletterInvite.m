@@ -26,6 +26,45 @@
 #import "SVProgressHUD.h"
 #import "ChimpKit.h"
 
+#import "LSNewsletterInviteSettings.h"
+#import "LSNewsletterInviteImages.h"
+
+/*
+ These definitions are the default values if the settings a settings file is not assigned
+ */
+
+#define NewsletterMailchimpDoubleOptIn NO
+#define NewsletterInviteIgnoreCancel NO
+
+static NSString * const NewsletterInviteTitle = @"Sign Up Today!";
+
+#define NewsletterInviteTitleFontSizePad 42
+#define NewsletterInviteTitleFontSizePhone 24
+
+static NSString * const NewsletterInviteFirstCopy = @"";
+
+#define NewsletterInviteFirstCopyFontSizePad 32
+#define NewsletterInviteFirstCopyFontSizePhone 14
+
+static NSString * const NewsletterInviteSecondCopy = @"We'd love to stay in touch for support, tips, and offers on all of our apps.";
+
+#define NewsletterInviteSecondCopyFontSizePad 30
+#define NewsletterInviteSecondCopyFontSizePhone 14
+
+#define NewsletterCopyFormMarginPad 60
+#define NewsletterCopyFormMarginPhone35 0
+#define NewsletterCopyFormMarginPhone4 0
+
+#define NewsletterTableViewWidthRatioPad 0.75
+#define NewsletterTableViewWidthRatioPhone 0.90
+
+#define NewsletterInviteTopMarginPad 150
+#define NewsletterInviteTopMarginPhone35 50
+#define NewsletterInviteTopMarginPhone4 75
+
+#define NewsletterInviteAfterLaunchCount 0
+#define NewsletterInviteCount 2
+
 /*
  These keys are used to store invite and launch count in NSUserDefaults
  */
@@ -73,24 +112,44 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
 
 @implementation LSNewsletterInvite
 
-+ (void)appLaunched:(BOOL)canPromptForNewsletter viewController:(UIViewController*)viewController {
++ (void)appLaunched:(BOOL)canPromptForNewsletter viewController:(UIViewController*)viewController andSettings:(LSNewsletterInviteSettings *)settings {
     
     /*
-       First it checks to see if the user has already accepted an invite. Then it checks launch count, if launch count requirements have been met it checks to see if the user has been invited less than the number of invites allowed.
+     First it checks to see if the user has already accepted an invite. Then it checks launch count, if launch count requirements have been met it checks to see if the user has been invited less than the number of invites allowed.
      */
-
+    
     if (![[NSUserDefaults standardUserDefaults] boolForKey:kNewsletterInviteAcceptedKey]) {
         
         NSInteger launchCount = [[NSUserDefaults standardUserDefaults] integerForKey:kNewsletterInviteAppLaunchCountKey];
         launchCount++;
         
-        if(launchCount > NewsletterInviteAfterLaunchCount) {
+        CGFloat afterLaunchCount = NewsletterInviteAfterLaunchCount;
+        
+        if(settings) {
+            if (settings.afterLaunchCount > 0) {
+                afterLaunchCount = settings.afterLaunchCount;
+            }
+        }
+        
+        if(launchCount > afterLaunchCount) {
             
             NSInteger inviteCount = [[NSUserDefaults standardUserDefaults] integerForKey:kNewsletterInviteCountKey];
-            if(inviteCount < NewsletterInviteCount) {
+            
+            CGFloat allowedInviteCount = NewsletterInviteCount;
+            if(settings) {
+                if(settings.inviteCount > 0) {
+                    allowedInviteCount = settings.inviteCount;
+                }
+            }
+            
+            if(inviteCount < allowedInviteCount) {
                 
                 LSNewsletterInvite *invite = [[LSNewsletterInvite alloc] init];
                 invite.viewController = viewController;
+                if(settings) {
+                    invite.settings = settings;
+                }
+
                 [viewController presentNewsletterInvite:invite];
                 
             }
@@ -99,7 +158,7 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
         
         [[NSUserDefaults standardUserDefaults] setInteger:launchCount forKey:kNewsletterInviteAppLaunchCountKey];
         [[NSUserDefaults standardUserDefaults] synchronize];
-    }
+    }    
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -109,6 +168,7 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
         //TODO: If coverImage text is nil, add a simple dark background view
         
         NSString *backgroundCustomImageName = NewsletterInviteBackgroundCustomImageName;
+        
         if(backgroundCustomImageName) {
             
             self.coverView = [[UIView alloc] initWithFrame:[UIScreen mainScreen].applicationFrame];
@@ -139,9 +199,15 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
                                              selector:@selector(keyboardWillShow:)
                                                  name:UIKeyboardWillShowNotification
                                                object:nil];
-
-
-    if(NewsletterInviteAllowCancel) {
+    
+    
+    BOOL ignoreCancel = NewsletterInviteIgnoreCancel;
+    
+    if(self.settings) {
+        ignoreCancel = self.settings.ignoreCancel;
+    }
+    
+    if(!NewsletterInviteIgnoreCancel) {
         
         UIButton *dismissButton = [UIButton buttonWithType:UIButtonTypeCustom];
         dismissButton.frame = self.view.frame;
@@ -150,8 +216,19 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
         
     }
     
-    CGFloat widthRatio = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? NewsletterTableViewWidthRatioPad : NewsletterTableViewWidthRatioPhone;
-
+    CGFloat tableViewWidthRatioPad = NewsletterTableViewWidthRatioPad;
+    CGFloat tableViewWidthRatioPhone = NewsletterTableViewWidthRatioPhone;
+    
+    if(self.settings) {
+        if(self.settings.tableViewWidthRatioPad) {
+            tableViewWidthRatioPad = self.settings.tableViewWidthRatioPad;
+        }
+        if(self.settings.tableViewWidthRatioPhone) {
+            tableViewWidthRatioPhone = self.settings.tableViewWidthRatioPhone;
+        }
+    }
+    
+    CGFloat widthRatio = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? tableViewWidthRatioPad : tableViewWidthRatioPhone;
     
     // The tableview's height is dynamically set to be the minimum height necessary to display all of the info set up in the header file.
     
@@ -162,19 +239,17 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
     self.tableView.scrollEnabled = NO;
     [self.view addSubview:self.tableView];
     
-    // TODO: Add the custom invite image to the background image of the table view.
-
     NSString *customInviteImageName = NewsletterInviteCustomImageName;
     UIView *backgroundView = [[UIView alloc] init];
-
+    
     if([customInviteImageName length] > 0) {
         UIImage *customInviteImage = [UIImage imageNamed:customInviteImageName];
         UIImageView *imageView = [[UIImageView alloc] initWithImage:customInviteImage];
         imageView.frame = CGRectMake((self.tableView.frame.size.width - customInviteImage.size.width)/2, 0, customInviteImage.size.width, customInviteImage.size.height);
-
+        
         backgroundView.backgroundColor = [UIColor clearColor];
         [self.tableView setBackgroundView:backgroundView];
-
+        
         [self.tableView.backgroundView addSubview:imageView];
     } else {
         backgroundView.backgroundColor = [UIColor whiteColor];
@@ -206,7 +281,7 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
     
     [[NSUserDefaults standardUserDefaults] setInteger:inviteCount forKey:kNewsletterInviteCountKey];
     [[NSUserDefaults standardUserDefaults] synchronize];
-
+    
     
     // The submit/subscribe button is dynamically updated to work only when their is an email in the email textfield
     
@@ -224,15 +299,15 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
     NSString *email = [[self.emailTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] lowercaseString];
     if([[NSPredicate predicateWithFormat:@"SELF MATCHES %@", kEmailRegex]
         evaluateWithObject:email]) {
-
+        
         self.subscribeButton.enabled = YES;
         self.subscribeButton.alpha = 1.0;
         
     } else {
-    
+        
         self.subscribeButton.enabled = NO;
         self.subscribeButton.alpha = 0.75;
-
+        
     }
     
 }
@@ -240,14 +315,14 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
 #pragma mark - UITableViewDataSource
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-
+    
     // The number of sections has an impact on layout. Because the tableview is a grouped table view there is a margin between sections. If you'd like to remove the margins, you'll need to merge the sections into one, and change to rows, or you'll need to change the table view type to plain.
     
     return TableViewSectionCount;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-
+    
     // Table view cell heights are dynaimcally set based on settins in the header.
     
     switch ([indexPath section]) {
@@ -258,7 +333,27 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
                 
                 return titleCustomImage.size.height;
             } else {
-                return [self cellHeightWithText:NewsletterInviteTitle fontSize:(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? NewsletterInviteTitleFontSizePad : NewsletterInviteTitleFontSizePhone bold:YES];
+                
+                CGFloat fontSizePad = NewsletterInviteTitleFontSizePad;
+                CGFloat fontSizePhone = NewsletterInviteTitleFontSizePhone;
+                
+                if(self.settings) {
+                    if(self.settings.titleFontSizePad > 0) {
+                        fontSizePad = self.settings.titleFontSizePad;
+                    }
+                    if(self.settings.titleFontSizePhone > 0) {
+                        fontSizePhone = self.settings.titleFontSizePhone;
+                    }
+                }
+                
+                NSString *inviteTitle = NewsletterInviteTitle;
+                if (self.settings) {
+                    if([self.settings.title length] > 0) {
+                        inviteTitle = self.settings.title;
+                    }
+                }
+                
+                return [self cellHeightWithText:inviteTitle fontSize:(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? fontSizePad : fontSizePhone bold:YES];
             }
             break;
         }
@@ -271,14 +366,70 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
                         
                         return firstCopyCustomImage.size.height;
                     } else {
-                    
-                    return [self cellHeightWithText:NewsletterInviteFirstCopy fontSize: (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? NewsletterInviteFirstCopyFontSizePad : NewsletterInviteFirstCopyFontSizePhone bold:YES];
+                        
+                        CGFloat fontSizePad = NewsletterInviteFirstCopyFontSizePad;
+                        CGFloat fontSizePhone = NewsletterInviteFirstCopyFontSizePhone;
+                        
+                        if(self.settings) {
+                            if(self.settings.firstCopyFontSizePad > 0) {
+                                fontSizePad = self.settings.firstCopyFontSizePhone;
+                            }
+                            if(self.settings.titleFontSizePhone > 0) {
+                                fontSizePhone = self.settings.titleFontSizePhone;
+                            }
+                        }
+                        
+                        NSString *inviteFirstCopy = NewsletterInviteFirstCopy;
+                        if (self.settings) {
+                            if([self.settings.firstCopy length] > 0) {
+                                inviteFirstCopy = self.settings.firstCopy;
+                            }
+                        }
+                        
+                        return [self cellHeightWithText:inviteFirstCopy fontSize: (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? fontSizePad : fontSizePhone bold:YES];
                     }
                     break;
                 }
                 case 1:{
-                    CGFloat copyFormMargin = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? NewsletterCopyFormMarginPad : (IS_IPHONE_5) ? NewsletterCopyFormMarginPhone4 : NewsletterCopyFormMarginPhone35;
-                    return [self cellHeightWithText:NewsletterInviteSecondCopy fontSize: (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? NewsletterInviteSecondCopyFontSizePad : NewsletterInviteSecondCopyFontSizePhone bold:NO] + copyFormMargin;
+                    
+                    CGFloat copyFormMarginPad = NewsletterCopyFormMarginPad;
+                    CGFloat copyFormMarginPhone35 = NewsletterCopyFormMarginPhone35;
+                    CGFloat copyFormMarginPhone4 = NewsletterCopyFormMarginPhone4;
+                    
+                    if(self.settings) {
+                        if(self.settings.copyFormMarginPad > 0) {
+                            copyFormMarginPad = self.settings.copyFormMarginPad;
+                        }
+                        if(self.settings.copyFormMarginPhone35 > 0) {
+                            copyFormMarginPhone35 = self.settings.copyFormMarginPhone35;
+                        }
+                        if(self.settings.copyFormMarginPhone4 > 0) {
+                            copyFormMarginPhone4 = self.settings.copyFormMarginPhone4;
+                        }
+                    }
+                    
+                    CGFloat copyFormMargin = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? copyFormMarginPad : (IS_IPHONE_5) ? copyFormMarginPhone4 : copyFormMarginPhone35;
+                    
+                    CGFloat fontSizePad = NewsletterInviteSecondCopyFontSizePad;
+                    CGFloat fontSizePhone = NewsletterInviteSecondCopyFontSizePhone;
+                    
+                    if(self.settings) {
+                        if(self.settings.secondCopyFontSizePad > 0) {
+                            fontSizePad = self.settings.secondCopyFontSizePad;
+                        }
+                        if(self.settings.titleFontSizePhone > 0) {
+                            fontSizePhone = self.settings.titleFontSizePhone;
+                        }
+                    }
+                    
+                    NSString *inviteSecondCopy = NewsletterInviteSecondCopy;
+                    if (self.settings) {
+                        if([self.settings.secondCopy length] > 0) {
+                            inviteSecondCopy = self.settings.secondCopy;
+                        }
+                    }
+                    
+                    return [self cellHeightWithText:inviteSecondCopy fontSize: (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? fontSizePad : fontSizePhone bold:NO] + copyFormMargin;
                     break;
                 }
             }
@@ -313,7 +464,7 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
             break;
     }
     return 0;
-
+    
 }
 
 - (CGFloat) cellHeightWithText:(NSString *)text fontSize:(CGFloat)fontSize bold:(BOOL)useBold {
@@ -330,7 +481,7 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
                                     constrainedToSize:CGSizeMake(self.tableView.frame.size.width - 20, 999)
                                         lineBreakMode:NSLineBreakByWordWrapping];
         return expectedLabelSize.height;
-    }    
+    }
 }
 
 -(void) tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
@@ -338,7 +489,24 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
     // This method captures the last section and row, and then updates the table view size to fit to the height of all visible cells.
     
     if([indexPath section] == (TableViewSectionCount - 1)) {
-        CGFloat topMargin = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? NewsletterInviteTopMarginPad : (IS_IPHONE_5) ? NewsletterInviteTopMarginPhone4 : NewsletterInviteTopMarginPhone35;
+        
+        CGFloat topMarginPad = NewsletterInviteTopMarginPad;
+        CGFloat topMarginPhone35 = NewsletterInviteTopMarginPhone35;
+        CGFloat topMarginPhone4 = NewsletterInviteTopMarginPhone4;
+        
+        if(self.settings) {
+            if(self.settings.topMarginPad > 0) {
+                topMarginPad = self.settings.topMarginPad;
+            }
+            if(self.settings.topMarginPhone35 > 0) {
+                topMarginPhone35 = self.settings.topMarginPhone35;
+            }
+            if(self.settings.topMarginPhone4 > 0) {
+                topMarginPhone4 = self.settings.topMarginPhone4;
+            }
+        }
+        
+        CGFloat topMargin = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? topMarginPad : (IS_IPHONE_5) ? topMarginPhone4 : topMarginPhone35;
         self.tableView.frame = CGRectMake(self.tableView.frame.origin.x, topMargin, self.tableView.frame.size.width, [self tableView:tableView heightAfterIndexPath:indexPath]);
     }
 }
@@ -357,7 +525,7 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightUpToIndexPath:(NSIndexPath *)indexPath {
-
+    
     // This is height BEFORE index path, it only adds each cell's height that isn't beyond the given index path
     
     CGFloat height = 0;
@@ -384,7 +552,7 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
     
     // LSNewsletterInvite uses the system font. Any custom fonts would need to be updated here and in the cellHeightWithText method.
     
-    // The cells are not dequeued. The table view is meant to be completely visible on screen with no scrolling. 
+    // The cells are not dequeued. The table view is meant to be completely visible on screen with no scrolling.
     
     UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cell"];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -409,8 +577,27 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
                 
             } else {
                 
-                cell.textLabel.text = NewsletterInviteTitle;
-                cell.textLabel.font = [UIFont systemFontOfSize:(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ?NewsletterInviteTitleFontSizePad : NewsletterInviteTitleFontSizePhone];
+                CGFloat fontSizePad = NewsletterInviteTitleFontSizePad;
+                CGFloat fontSizePhone = NewsletterInviteTitleFontSizePhone;
+                
+                if(self.settings) {
+                    if(self.settings.titleFontSizePad > 0) {
+                        fontSizePad = self.settings.titleFontSizePad;
+                    }
+                    if(self.settings.titleFontSizePhone > 0) {
+                        fontSizePhone = self.settings.titleFontSizePhone;
+                    }
+                }
+                
+                NSString *inviteTitle = NewsletterInviteTitle;
+                if (self.settings) {
+                    if([self.settings.title length] > 0) {
+                        inviteTitle = self.settings.title;
+                    }
+                }
+                
+                cell.textLabel.text = inviteTitle;
+                cell.textLabel.font = [UIFont systemFontOfSize:(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? fontSizePad : fontSizePhone];
                 cell.textLabel.textAlignment = NSTextAlignmentCenter;
                 cell.textLabel.numberOfLines = 0;
                 cell.textLabel.lineBreakMode = NSLineBreakByWordWrapping;
@@ -437,12 +624,29 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
                                                               0, firstCopyCustomImage.size.width, firstCopyCustomImage.size.height);
                         
                         [cell.contentView addSubview:firstCopyImageView];
-                        
                     } else {
                         
+                        CGFloat fontSizePad = NewsletterInviteFirstCopyFontSizePad;
+                        CGFloat fontSizePhone = NewsletterInviteFirstCopyFontSizePhone;
                         
-                        cell.textLabel.text = NewsletterInviteFirstCopy;
-                        cell.textLabel.font = [UIFont systemFontOfSize:(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? NewsletterInviteFirstCopyFontSizePad : NewsletterInviteFirstCopyFontSizePhone];
+                        if(self.settings) {
+                            if(self.settings.firstCopyFontSizePad > 0) {
+                                fontSizePad = self.settings.firstCopyFontSizePad;
+                            }
+                            if(self.settings.firstCopyFontSizePhone > 0) {
+                                fontSizePhone = self.settings.firstCopyFontSizePhone;
+                            }
+                        }
+                        
+                        NSString *inviteFirstCopy = NewsletterInviteFirstCopy;
+                        if (self.settings) {
+                            if([self.settings.firstCopy length] > 0) {
+                                inviteFirstCopy = self.settings.firstCopy;
+                            }
+                        }
+                        
+                        cell.textLabel.text = inviteFirstCopy;
+                        cell.textLabel.font = [UIFont systemFontOfSize:(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? fontSizePad : fontSizePhone];
                         cell.textLabel.textAlignment = NSTextAlignmentCenter;
                         cell.textLabel.numberOfLines = 0;
                         cell.textLabel.lineBreakMode = NSLineBreakByWordWrapping;
@@ -452,7 +656,6 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
                     break;
                 }
                 case 1: {
-                    
                     NSString *secondCopyCustomImageName = NewsletterInviteSecondCopyCustomImage;
                     if ([secondCopyCustomImageName length] > 0) {
                         
@@ -465,15 +668,33 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
                         CGFloat margins = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? 60 : 20;
                         
                         secondCopyImageView.frame = CGRectMake(((tableView.frame.size.width - margins) - secondCopyCustomImage.size.width) / 2,
-                                                              0, secondCopyCustomImage.size.width, secondCopyCustomImage.size.height);
+                                                               0, secondCopyCustomImage.size.width, secondCopyCustomImage.size.height);
                         
                         [cell.contentView addSubview:secondCopyImageView];
                         
                     } else {
                         
+                        CGFloat fontSizePad = NewsletterInviteSecondCopyFontSizePad;
+                        CGFloat fontSizePhone = NewsletterInviteSecondCopyFontSizePhone;
                         
-                        cell.textLabel.text = NewsletterInviteSecondCopy;
-                        cell.textLabel.font = [UIFont systemFontOfSize:(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? NewsletterInviteSecondCopyFontSizePad : NewsletterInviteSecondCopyFontSizePhone];
+                        if(self.settings) {
+                            if(self.settings.secondCopyFontSizePad > 0) {
+                                fontSizePad = self.settings.secondCopyFontSizePad;
+                            }
+                            if(self.settings.secondCopyFontSizePhone > 0) {
+                                fontSizePhone = self.settings.secondCopyFontSizePhone;
+                            }
+                        }
+                        
+                        NSString *inviteSecondCopy = NewsletterInviteSecondCopy;
+                        if (self.settings) {
+                            if([self.settings.secondCopy length] > 0) {
+                                inviteSecondCopy = self.settings.secondCopy;
+                            }
+                        }
+                        
+                        cell.textLabel.text = inviteSecondCopy;
+                        cell.textLabel.font = [UIFont systemFontOfSize:(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? fontSizePad : fontSizePhone];
                         cell.textLabel.textAlignment = NSTextAlignmentCenter;
                         cell.textLabel.numberOfLines = 0;
                         cell.textLabel.lineBreakMode = NSLineBreakByWordWrapping;
@@ -507,14 +728,14 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
             }
             break;
         case TableViewSubmitButtonSection: {
-
+            
             self.subscribeButton = [UIButton buttonWithType:UIButtonTypeCustom];
             UIImage *submitButtonImage = [UIImage imageNamed:@"submit_button"];
             [self.subscribeButton setImage:submitButtonImage forState:UIControlStateNormal];
             
             CGFloat margins = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? 60 : 20;
             self.subscribeButton.frame = CGRectMake(((tableView.frame.size.width - margins) - submitButtonImage.size.width) / 2,
-                                            0, submitButtonImage.size.width, submitButtonImage.size.height);
+                                                    0, submitButtonImage.size.width, submitButtonImage.size.height);
             [self.subscribeButton addTarget:self action:@selector(subscribe) forControlEvents:UIControlEventTouchUpInside];
             [cell.contentView addSubview:self.subscribeButton];
             
@@ -540,7 +761,7 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
 #pragma mark - UITextFieldDelegate
 
 - (void)keyboardWillShow:(NSNotification *)notification {
-
+    
     NSDictionary *userInfo = [notification userInfo];
     NSValue *animationDurationValue = [userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey];
     NSTimeInterval animationDuration;
@@ -553,18 +774,34 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
         self.tableView.frame = CGRectMake(self.tableView.frame.origin.x,
                                           offset, self.tableView.frame.size.width, self.tableView.frame.size.height);
     }];
-
+    
 }
 
 - (void)keyboardWillHide:(NSNotification *)notification {
-
-    NSDictionary *userInfo = [notification userInfo];    
+    
+    NSDictionary *userInfo = [notification userInfo];
     NSValue *animationDurationValue = [userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey];
     NSTimeInterval animationDuration;
     [animationDurationValue getValue:&animationDuration];
     [UIView animateWithDuration:animationDuration animations:^{
         
-        CGFloat topMargin = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? NewsletterInviteTopMarginPad : (IS_IPHONE_5) ? NewsletterInviteTopMarginPhone4 : NewsletterInviteTopMarginPhone35;
+        CGFloat topMarginPad = NewsletterInviteTopMarginPad;
+        CGFloat topMarginPhone35 = NewsletterInviteTopMarginPhone35;
+        CGFloat topMarginPhone4 = NewsletterInviteTopMarginPhone4;
+        
+        if(self.settings) {
+            if(self.settings.topMarginPad > 0) {
+                topMarginPad = self.settings.topMarginPad;
+            }
+            if(self.settings.topMarginPhone35 > 0) {
+                topMarginPhone35 = self.settings.topMarginPhone35;
+            }
+            if(self.settings.topMarginPhone4 > 0) {
+                topMarginPhone4 = self.settings.topMarginPhone4;
+            }
+        }
+        
+        CGFloat topMargin = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? topMarginPad : (IS_IPHONE_5) ? topMarginPhone4 : topMarginPhone35;
         
         self.tableView.frame = CGRectMake(self.tableView.frame.origin.x, topMargin, self.tableView.frame.size.width, self.tableView.frame.size.height);
         
@@ -575,9 +812,9 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
     if (textField == self.emailTextField) {
         [self.nameTextField becomeFirstResponder];
     } else if (textField == self.nameTextField) {
-
+        
         // The return button on the text fields will cycle through name and email until the string in the email textfield is an email, then it will submit.
-
+        
         if(self.subscribeButton.enabled) {
             [self.nameTextField resignFirstResponder];
             [self subscribe];
@@ -600,10 +837,22 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
 - (void)subscribe {
     [self.view endEditing:YES];
     
+    NSDictionary* mailChimpInfo = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"MailChimp"];
+    NSString *mailChimpAPIKey = [mailChimpInfo objectForKey:@"MailChimpAPIKey"];
+    NSString *mailChimpListIDKey = [mailChimpInfo objectForKey:@"MailChimpListID"];
+    
+    NSArray *mailChimpGroups = [mailChimpInfo objectForKey:@"MailChimpGroups"];
+    
+    BOOL mailChimpDoubleOptIn = NewsletterMailchimpDoubleOptIn;
+    
+    if(self.settings) {
+        mailChimpDoubleOptIn = self.settings.mailchimpDoubleOptIn;
+    }
+    
     [SVProgressHUD showWithStatus:@"Subscribing" maskType:SVProgressHUDMaskTypeClear];
     
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
-    [params setValue:NewsletterMailchimpListId forKey:@"id"];
+    [params setValue:mailChimpListIDKey forKey:@"id"];
     
     NSString *email = [self.emailTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     [params setValue:email forKey:@"email_address"];
@@ -619,20 +868,15 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
     
     // If your NewsletterMailChimpGroup is set to @"" it will skip this section. You can group your email signups by app which allows for more control over your mailing schedules. This is not important to some developers.
     
-    NSString *group = NewsletterMailchimpGroup;
-    if([group length] > 0) {
-        
-        NSMutableArray *groupings = [NSArray arrayWithObject:[NSDictionary dictionaryWithObjectsAndKeys:
-                                                              NewsletterMailchimpGroupName, @"name",
-                                                              NewsletterMailchimpGroup, @"groups",
-                                                              nil]];
+    if([mailChimpGroups count] > 0) {
+        NSMutableArray *groupings = [NSArray arrayWithArray:mailChimpGroups];
         [mergeVars setValue:groupings forKey:@"GROUPINGS"];
-    }    
+    }
     
-    [params setValue:[NSNumber numberWithBool:NewsletterMailchimpDoubleOptIn] forKey:@"double_optin"];    
+    [params setValue:[NSNumber numberWithBool:mailChimpDoubleOptIn] forKey:@"double_optin"];
     [params setValue:mergeVars forKey:@"merge_vars"];
     
-    ChimpKit *ck = [[ChimpKit alloc] initWithDelegate:self andApiKey:NewsletterMailchimpKey];
+    ChimpKit *ck = [[ChimpKit alloc] initWithDelegate:self andApiKey:mailChimpAPIKey];
     [ck callApiMethod:@"listSubscribe" withParams:params];
 }
 
@@ -640,7 +884,7 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
 
 - (void)ckRequestSucceeded:(ChimpKit *)ckRequest {
     [SVProgressHUD showSuccessWithStatus:@"Subscribed"];
-
+    
     if(_delegate) {
         [self.delegate newsletterInviteDidFinish:self];
     } else {
@@ -653,7 +897,7 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
                                      self.emailTextField.text, kEmailKey,
                                      self.nameTextField.text, kNameKey,
                                      nil];
-
+    
     [[NSNotificationCenter defaultCenter] postNotificationName:kLSNewsletterInviteSuccessfulSignupNotificationKey object:nil userInfo:userInfo];
 }
 
@@ -688,7 +932,7 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
     [UIApplication.sharedApplication.delegate.window.rootViewController addChildViewController:newsletterInvite];
     
     CGRect viewFrame;
-        
+    
     viewFrame = CGRectMake(0, 0, rootView.bounds.size.width, rootView.bounds.size.height);
     
 	coverView.frame = viewFrame;
@@ -733,7 +977,7 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
 -(CGPoint) offscreenCenter {
     CGPoint offScreenCenter = CGPointZero;
     
-    UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;    
+    UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
     CGSize offSize = UIScreen.mainScreen.bounds.size;
     
 	if(orientation == UIInterfaceOrientationLandscapeLeft || orientation == UIInterfaceOrientationLandscapeRight) {
