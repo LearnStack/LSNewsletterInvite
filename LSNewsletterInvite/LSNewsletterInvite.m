@@ -27,43 +27,48 @@
 #import "ChimpKit.h"
 
 #import "LSNewsletterInviteSettings.h"
-#import "LSNewsletterInviteImages.h"
 
 /*
  These definitions are the default values if the settings a settings file is not assigned
  */
 
-#define NewsletterMailchimpDoubleOptIn NO
-#define NewsletterInviteIgnoreCancel NO
+static NSString * const kNewsletterInviteBackgroundCustomImageName = @"newsletter_background_custom_sample";
+static NSString * const kNewsletterInviteCustomImageName = @"newsletter_invite_custom_sample";
 
-static NSString * const NewsletterInviteTitle = @"Sign Up Today!";
+static const BOOL kNewsletterMailchimpDoubleOptIn = NO;
+static const BOOL kNewsletterInviteIgnoreCancel = NO;
 
-#define NewsletterInviteTitleFontSizePad 42
-#define NewsletterInviteTitleFontSizePhone 24
+static NSString * const kNewsletterInviteTitle = @"Sign Up Today!";
+static NSString * const kNewsletterInviteTitleCustomImage = @"";
 
-static NSString * const NewsletterInviteFirstCopy = @"";
+static const CGFloat kNewsletterInviteTitleFontSizePad = 42;
+static const CGFloat kNewsletterInviteTitleFontSizePhone = 24;
 
-#define NewsletterInviteFirstCopyFontSizePad 32
-#define NewsletterInviteFirstCopyFontSizePhone 14
+static NSString * const kNewsletterInviteFirstCopy = @"";
+static NSString * const kNewsletterInviteFirstCopyCustomImage = @"";
 
-static NSString * const NewsletterInviteSecondCopy = @"We'd love to stay in touch for support, tips, and offers on all of our apps.";
+static const CGFloat kNewsletterInviteFirstCopyFontSizePad = 32;
+static const CGFloat kNewsletterInviteFirstCopyFontSizePhone = 14;
 
-#define NewsletterInviteSecondCopyFontSizePad 30
-#define NewsletterInviteSecondCopyFontSizePhone 14
+static NSString * const kNewsletterInviteSecondCopy = @"We'd love to stay in touch for support, tips, and offers on all of our apps.";
+static NSString * const kNewsletterInviteSecondCopyCustomImage = @"";
 
-#define NewsletterCopyFormMarginPad 60
-#define NewsletterCopyFormMarginPhone35 0
-#define NewsletterCopyFormMarginPhone4 0
+static const CGFloat kNewsletterInviteSecondCopyFontSizePad = 30;
+static const CGFloat kNewsletterInviteSecondCopyFontSizePhone = 14;
 
-#define NewsletterTableViewWidthRatioPad 0.75
-#define NewsletterTableViewWidthRatioPhone 0.90
+static const CGFloat kNewsletterCopyFormMarginPad = 60;
+static const CGFloat kNewsletterCopyFormMarginPhone35 = 0;
+static const CGFloat kNewsletterCopyFormMarginPhone4 = 0;
 
-#define NewsletterInviteTopMarginPad 150
-#define NewsletterInviteTopMarginPhone35 50
-#define NewsletterInviteTopMarginPhone4 75
+static const CGFloat kNewsletterTableViewWidthRatioPad = 0.75;
+static const CGFloat kNewsletterTableViewWidthRatioPhone = 0.90;
 
-#define NewsletterInviteAfterLaunchCount 0
-#define NewsletterInviteCount 2
+static const CGFloat kNewsletterInviteTopMarginPad = 150;
+static const CGFloat kNewsletterInviteTopMarginPhone35 = 50;
+static const CGFloat kNewsletterInviteTopMarginPhone4 = 75;
+
+static const CGFloat kNewsletterInviteAfterLaunchCount = 0;
+static const CGFloat kNewsletterInviteCount = 2;
 
 /*
  These keys are used to store invite and launch count in NSUserDefaults
@@ -123,7 +128,7 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
         NSInteger launchCount = [[NSUserDefaults standardUserDefaults] integerForKey:kNewsletterInviteAppLaunchCountKey];
         launchCount++;
         
-        CGFloat afterLaunchCount = NewsletterInviteAfterLaunchCount;
+        CGFloat afterLaunchCount = kNewsletterInviteAfterLaunchCount;
         
         if(settings) {
             if (settings.afterLaunchCount > 0) {
@@ -135,7 +140,7 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
             
             NSInteger inviteCount = [[NSUserDefaults standardUserDefaults] integerForKey:kNewsletterInviteCountKey];
             
-            CGFloat allowedInviteCount = NewsletterInviteCount;
+            CGFloat allowedInviteCount = kNewsletterInviteCount;
             if(settings) {
                 if(settings.inviteCount > 0) {
                     allowedInviteCount = settings.inviteCount;
@@ -167,7 +172,13 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
     if (self) {
         //TODO: If coverImage text is nil, add a simple dark background view
         
-        NSString *backgroundCustomImageName = NewsletterInviteBackgroundCustomImageName;
+        NSString *backgroundCustomImageName = kNewsletterInviteBackgroundCustomImageName;
+        
+        if(self.settings) {
+            if([self.settings.inviteBackgroundCustomImageName length] > 0) {
+                backgroundCustomImageName = self.settings.inviteBackgroundCustomImageName;
+            }
+        }
         
         if(backgroundCustomImageName) {
             
@@ -201,13 +212,13 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
                                                object:nil];
     
     
-    BOOL ignoreCancel = NewsletterInviteIgnoreCancel;
+    BOOL ignoreCancel = kNewsletterInviteIgnoreCancel;
     
     if(self.settings) {
         ignoreCancel = self.settings.ignoreCancel;
     }
     
-    if(!NewsletterInviteIgnoreCancel) {
+    if(!ignoreCancel) {
         
         UIButton *dismissButton = [UIButton buttonWithType:UIButtonTypeCustom];
         dismissButton.frame = self.view.frame;
@@ -216,8 +227,8 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
         
     }
     
-    CGFloat tableViewWidthRatioPad = NewsletterTableViewWidthRatioPad;
-    CGFloat tableViewWidthRatioPhone = NewsletterTableViewWidthRatioPhone;
+    CGFloat tableViewWidthRatioPad = kNewsletterTableViewWidthRatioPad;
+    CGFloat tableViewWidthRatioPhone = kNewsletterTableViewWidthRatioPhone;
     
     if(self.settings) {
         if(self.settings.tableViewWidthRatioPad) {
@@ -239,7 +250,14 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
     self.tableView.scrollEnabled = NO;
     [self.view addSubview:self.tableView];
     
-    NSString *customInviteImageName = NewsletterInviteCustomImageName;
+    NSString *customInviteImageName = kNewsletterInviteCustomImageName;
+    
+    if(self.settings) {
+        if([self.settings.inviteCustomImageName length] > 0) {
+            customInviteImageName = self.settings.inviteCustomImageName;
+        }
+    }
+    
     UIView *backgroundView = [[UIView alloc] init];
     
     if([customInviteImageName length] > 0) {
@@ -327,15 +345,22 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
     
     switch ([indexPath section]) {
         case TableViewTitleSection: {
-            NSString *titleCustomImageName = NewsletterInviteTitleCustomImage;
+            NSString *titleCustomImageName = kNewsletterInviteTitleCustomImage;
+
+            if(self.settings) {
+                if([self.settings.inviteTitleCustomImage length] > 0) {
+                    titleCustomImageName = self.settings.inviteTitleCustomImage;
+                }
+            }
+
             if ([titleCustomImageName length] > 0) {
                 UIImage *titleCustomImage = [UIImage imageNamed:titleCustomImageName];
                 
                 return titleCustomImage.size.height;
             } else {
                 
-                CGFloat fontSizePad = NewsletterInviteTitleFontSizePad;
-                CGFloat fontSizePhone = NewsletterInviteTitleFontSizePhone;
+                CGFloat fontSizePad = kNewsletterInviteTitleFontSizePad;
+                CGFloat fontSizePhone = kNewsletterInviteTitleFontSizePhone;
                 
                 if(self.settings) {
                     if(self.settings.titleFontSizePad > 0) {
@@ -346,7 +371,7 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
                     }
                 }
                 
-                NSString *inviteTitle = NewsletterInviteTitle;
+                NSString *inviteTitle = kNewsletterInviteTitle;
                 if (self.settings) {
                     if([self.settings.title length] > 0) {
                         inviteTitle = self.settings.title;
@@ -360,15 +385,22 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
         case TableViewCopySection: {
             switch ([indexPath row]) {
                 case 0: {
-                    NSString *firstCopyCustomImageName = NewsletterInviteFirstCopyCustomImage;
+                    NSString *firstCopyCustomImageName = kNewsletterInviteFirstCopyCustomImage;
+                    
+                    if(self.settings) {
+                        if([self.settings.firstCopyCustomImage length] > 0) {
+                            firstCopyCustomImageName = self.settings.firstCopyCustomImage;
+                        }
+                    }
+                    
                     if ([firstCopyCustomImageName length] > 0) {
                         UIImage *firstCopyCustomImage = [UIImage imageNamed:firstCopyCustomImageName];
                         
                         return firstCopyCustomImage.size.height;
                     } else {
                         
-                        CGFloat fontSizePad = NewsletterInviteFirstCopyFontSizePad;
-                        CGFloat fontSizePhone = NewsletterInviteFirstCopyFontSizePhone;
+                        CGFloat fontSizePad = kNewsletterInviteFirstCopyFontSizePad;
+                        CGFloat fontSizePhone = kNewsletterInviteFirstCopyFontSizePhone;
                         
                         if(self.settings) {
                             if(self.settings.firstCopyFontSizePad > 0) {
@@ -379,7 +411,7 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
                             }
                         }
                         
-                        NSString *inviteFirstCopy = NewsletterInviteFirstCopy;
+                        NSString *inviteFirstCopy = kNewsletterInviteFirstCopy;
                         if (self.settings) {
                             if([self.settings.firstCopy length] > 0) {
                                 inviteFirstCopy = self.settings.firstCopy;
@@ -392,9 +424,9 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
                 }
                 case 1:{
                     
-                    CGFloat copyFormMarginPad = NewsletterCopyFormMarginPad;
-                    CGFloat copyFormMarginPhone35 = NewsletterCopyFormMarginPhone35;
-                    CGFloat copyFormMarginPhone4 = NewsletterCopyFormMarginPhone4;
+                    CGFloat copyFormMarginPad = kNewsletterCopyFormMarginPad;
+                    CGFloat copyFormMarginPhone35 = kNewsletterCopyFormMarginPhone35;
+                    CGFloat copyFormMarginPhone4 = kNewsletterCopyFormMarginPhone4;
                     
                     if(self.settings) {
                         if(self.settings.copyFormMarginPad > 0) {
@@ -410,8 +442,8 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
                     
                     CGFloat copyFormMargin = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? copyFormMarginPad : (IS_IPHONE_5) ? copyFormMarginPhone4 : copyFormMarginPhone35;
                     
-                    CGFloat fontSizePad = NewsletterInviteSecondCopyFontSizePad;
-                    CGFloat fontSizePhone = NewsletterInviteSecondCopyFontSizePhone;
+                    CGFloat fontSizePad = kNewsletterInviteSecondCopyFontSizePad;
+                    CGFloat fontSizePhone = kNewsletterInviteSecondCopyFontSizePhone;
                     
                     if(self.settings) {
                         if(self.settings.secondCopyFontSizePad > 0) {
@@ -422,7 +454,7 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
                         }
                     }
                     
-                    NSString *inviteSecondCopy = NewsletterInviteSecondCopy;
+                    NSString *inviteSecondCopy = kNewsletterInviteSecondCopy;
                     if (self.settings) {
                         if([self.settings.secondCopy length] > 0) {
                             inviteSecondCopy = self.settings.secondCopy;
@@ -490,9 +522,9 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
     
     if([indexPath section] == (TableViewSectionCount - 1)) {
         
-        CGFloat topMarginPad = NewsletterInviteTopMarginPad;
-        CGFloat topMarginPhone35 = NewsletterInviteTopMarginPhone35;
-        CGFloat topMarginPhone4 = NewsletterInviteTopMarginPhone4;
+        CGFloat topMarginPad = kNewsletterInviteTopMarginPad;
+        CGFloat topMarginPhone35 = kNewsletterInviteTopMarginPhone35;
+        CGFloat topMarginPhone4 = kNewsletterInviteTopMarginPhone4;
         
         if(self.settings) {
             if(self.settings.topMarginPad > 0) {
@@ -559,7 +591,14 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
     
     switch (indexPath.section) {
         case TableViewTitleSection: {
-            NSString *titleCustomImageName = NewsletterInviteTitleCustomImage;
+            NSString *titleCustomImageName = kNewsletterInviteTitleCustomImage;
+            
+            if(self.settings) {
+                if([self.settings.inviteTitleCustomImage length] > 0) {
+                    titleCustomImageName = self.settings.inviteTitleCustomImage;
+                }
+            }
+            
             if ([titleCustomImageName length] > 0) {
                 
                 cell.backgroundColor = [UIColor clearColor];
@@ -577,8 +616,8 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
                 
             } else {
                 
-                CGFloat fontSizePad = NewsletterInviteTitleFontSizePad;
-                CGFloat fontSizePhone = NewsletterInviteTitleFontSizePhone;
+                CGFloat fontSizePad = kNewsletterInviteTitleFontSizePad;
+                CGFloat fontSizePhone = kNewsletterInviteTitleFontSizePhone;
                 
                 if(self.settings) {
                     if(self.settings.titleFontSizePad > 0) {
@@ -589,7 +628,7 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
                     }
                 }
                 
-                NSString *inviteTitle = NewsletterInviteTitle;
+                NSString *inviteTitle = kNewsletterInviteTitle;
                 if (self.settings) {
                     if([self.settings.title length] > 0) {
                         inviteTitle = self.settings.title;
@@ -609,7 +648,14 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
         case TableViewCopySection: {
             switch (indexPath.row) {
                 case 0: {
-                    NSString *firstCopyCustomImageName = NewsletterInviteFirstCopyCustomImage;
+                    NSString *firstCopyCustomImageName = kNewsletterInviteFirstCopyCustomImage;
+                    
+                    if(self.settings) {
+                        if([self.settings.firstCopyCustomImage length] > 0) {
+                            firstCopyCustomImageName = self.settings.firstCopyCustomImage;
+                        }
+                    }
+                    
                     if ([firstCopyCustomImageName length] > 0) {
                         
                         cell.backgroundColor = [UIColor clearColor];
@@ -626,8 +672,8 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
                         [cell.contentView addSubview:firstCopyImageView];
                     } else {
                         
-                        CGFloat fontSizePad = NewsletterInviteFirstCopyFontSizePad;
-                        CGFloat fontSizePhone = NewsletterInviteFirstCopyFontSizePhone;
+                        CGFloat fontSizePad = kNewsletterInviteFirstCopyFontSizePad;
+                        CGFloat fontSizePhone = kNewsletterInviteFirstCopyFontSizePhone;
                         
                         if(self.settings) {
                             if(self.settings.firstCopyFontSizePad > 0) {
@@ -638,7 +684,7 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
                             }
                         }
                         
-                        NSString *inviteFirstCopy = NewsletterInviteFirstCopy;
+                        NSString *inviteFirstCopy = kNewsletterInviteFirstCopy;
                         if (self.settings) {
                             if([self.settings.firstCopy length] > 0) {
                                 inviteFirstCopy = self.settings.firstCopy;
@@ -656,7 +702,14 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
                     break;
                 }
                 case 1: {
-                    NSString *secondCopyCustomImageName = NewsletterInviteSecondCopyCustomImage;
+                    NSString *secondCopyCustomImageName = kNewsletterInviteSecondCopyCustomImage;
+                    
+                    if(self.settings) {
+                        if([self.settings.secondCopyCustomImage length] > 0) {
+                            secondCopyCustomImageName = self.settings.secondCopyCustomImage;
+                        }
+                    }
+                    
                     if ([secondCopyCustomImageName length] > 0) {
                         
                         cell.backgroundColor = [UIColor clearColor];
@@ -674,8 +727,8 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
                         
                     } else {
                         
-                        CGFloat fontSizePad = NewsletterInviteSecondCopyFontSizePad;
-                        CGFloat fontSizePhone = NewsletterInviteSecondCopyFontSizePhone;
+                        CGFloat fontSizePad = kNewsletterInviteSecondCopyFontSizePad;
+                        CGFloat fontSizePhone = kNewsletterInviteSecondCopyFontSizePhone;
                         
                         if(self.settings) {
                             if(self.settings.secondCopyFontSizePad > 0) {
@@ -686,7 +739,7 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
                             }
                         }
                         
-                        NSString *inviteSecondCopy = NewsletterInviteSecondCopy;
+                        NSString *inviteSecondCopy = kNewsletterInviteSecondCopy;
                         if (self.settings) {
                             if([self.settings.secondCopy length] > 0) {
                                 inviteSecondCopy = self.settings.secondCopy;
@@ -785,9 +838,9 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
     [animationDurationValue getValue:&animationDuration];
     [UIView animateWithDuration:animationDuration animations:^{
         
-        CGFloat topMarginPad = NewsletterInviteTopMarginPad;
-        CGFloat topMarginPhone35 = NewsletterInviteTopMarginPhone35;
-        CGFloat topMarginPhone4 = NewsletterInviteTopMarginPhone4;
+        CGFloat topMarginPad = kNewsletterInviteTopMarginPad;
+        CGFloat topMarginPhone35 = kNewsletterInviteTopMarginPhone35;
+        CGFloat topMarginPhone4 = kNewsletterInviteTopMarginPhone4;
         
         if(self.settings) {
             if(self.settings.topMarginPad > 0) {
@@ -843,7 +896,7 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
     
     NSArray *mailChimpGroups = [mailChimpInfo objectForKey:@"MailChimpGroups"];
     
-    BOOL mailChimpDoubleOptIn = NewsletterMailchimpDoubleOptIn;
+    BOOL mailChimpDoubleOptIn = kNewsletterMailchimpDoubleOptIn;
     
     if(self.settings) {
         mailChimpDoubleOptIn = self.settings.mailchimpDoubleOptIn;

@@ -43,7 +43,6 @@
 		4F00829B1731AE4100D6239F /* LSNewsletterInviteSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSNewsletterInviteSettings.h; sourceTree = "<group>"; };
 		4F0082AA1731BBBF00D6239F /* LSNewsletterInvite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSNewsletterInvite.m; sourceTree = "<group>"; };
 		4F0082AC1731BBFF00D6239F /* LSNewsletterInviteSettings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSNewsletterInviteSettings.m; sourceTree = "<group>"; };
-		4F0082BA1731C3D800D6239F /* LSNewsletterInviteImages.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSNewsletterInviteImages.h; sourceTree = "<group>"; };
 		4F350B0B16F7C9FF0002AA89 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Icon.png; path = ../Icon.png; sourceTree = "<group>"; };
 		4F350B0D16F7CA040002AA89 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon@2x.png"; path = "../Icon@2x.png"; sourceTree = "<group>"; };
 		4F350B0F16F7CA100002AA89 /* Icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-72.png"; path = "../Icon-72.png"; sourceTree = "<group>"; };
@@ -125,7 +124,6 @@
 				4F0082AA1731BBBF00D6239F /* LSNewsletterInvite.m */,
 				4F00829B1731AE4100D6239F /* LSNewsletterInviteSettings.h */,
 				4F0082AC1731BBFF00D6239F /* LSNewsletterInviteSettings.m */,
-				4F0082BA1731C3D800D6239F /* LSNewsletterInviteImages.h */,
 			);
 			name = LSNewsletterInvite;
 			path = ../../LSNewsletterInvite;

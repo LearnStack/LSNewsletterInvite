@@ -2,14 +2,37 @@
 //  LSNewsletterInviteSettings.h
 //  LSNewsletterInviteDemo
 //
-//  Created by Joshua Howland on 5/1/13.
-//  Copyright (c) 2013 LearnStack. All rights reserved.
+//  Copyright (c) 2013 LearnStack, LLC. All rights reserved.
 //
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
 
 #import <Foundation/Foundation.h>
 
 @interface LSNewsletterInviteSettings : NSDictionary
 
+/*
+ You can customize the view with an invite image that will sit behind the table view (a sample image is included)
+ You can also customize the background cover view image (this is a view that sits behind the invite.
+ */
+
+@property (nonatomic, strong) NSString *inviteBackgroundCustomImageName;
+@property (nonatomic, strong) NSString *inviteCustomImageName;
 
 // This allows you to disable Double Opt In, so they don't have to confirm that they really signed up
 
@@ -26,6 +49,12 @@
 @property (nonatomic, assign) CGFloat titleFontSizePhone;
 
 /*
+ You can use a custom image for your title view. If there is a custom image, it will not use the title text.
+ */
+
+@property (nonatomic, strong) NSString *inviteTitleCustomImage;
+
+/*
  LSNewsletterInvite allows for two lines of copy with different font sizes and text. If either line is left blank
  it will simply give that row a height of 0.
  
@@ -37,12 +66,27 @@
 @property (nonatomic, assign) CGFloat firstCopyFontSizePhone;
 
 /*
+ LSNewsletterInvite allows for two lines of copy with different font sizes and text. If either line is left blank
+ it will simply give that row a height of 0.
+ 
+ The first line of copy image. If you use an image the text will not be used.
+ */
+
+@property (nonatomic, strong) NSString *firstCopyCustomImage;
+
+/*
  The second line of copy text, including font sizes for iPhone and iPad
  */
 
 @property (nonatomic, strong) NSString *secondCopy;
 @property (nonatomic, assign) CGFloat secondCopyFontSizePad;
 @property (nonatomic, assign) CGFloat secondCopyFontSizePhone;
+
+/*
+ The second line of copy image. If you use an image the text will not be used.
+ */
+
+@property (nonatomic, strong) NSString *secondCopyCustomImage;
 
 /*
  You can customize the margin between the copy and the form for iPhone and iPad
