@@ -27,7 +27,7 @@
 @interface LSNewsletterInviteSettings : NSDictionary
 
 /*
- You can customize the view with an invite image that will sit behind the table view (a sample image is included)
+ You can customize the view with an invite image that will sit behind the view (a sample image is included)
  You can also customize the background cover view image (this is a view that sits behind the invite.
  */
 
@@ -97,19 +97,19 @@
 @property (nonatomic, assign) CGFloat copyFormMarginPhone4;
 
 /*
- The width of the table view is dependant on you. You can make it the full width of the view, or a portion.
- The dismiss button is behind the table view. If you make the table view the full width, you will be effectively
+ The width of the view is dependant on you. You can make it the full width of the view, or a portion.
+ The dismiss button is behind the view. If you make the view the full width, you will be effectively
  disabling the dismiss button.
  */
 
-@property (nonatomic, assign) CGFloat tableViewWidthRatioPad;
-@property (nonatomic, assign) CGFloat tableViewWidthRatioPhone;
+@property (nonatomic, assign) CGFloat viewWidthRatioPad;
+@property (nonatomic, assign) CGFloat viewWidthRatioPhone;
 
 /*
- The top margin for the iPhone and iPad. This will set how far down from the top of the screenthe invite title will start
+ The top margin for the iPhone. This will set how far down from the top of the screen the invite title will start.
+ This setting is only used in portrait mode. In landscape mode, the view is centered.
  */
 
-@property (nonatomic, assign) CGFloat topMarginPad;
 @property (nonatomic, assign) CGFloat topMarginPhone35;
 @property (nonatomic, assign) CGFloat topMarginPhone4;
 

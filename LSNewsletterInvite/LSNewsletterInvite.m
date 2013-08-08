@@ -28,12 +28,14 @@
 
 #import "LSNewsletterInviteSettings.h"
 
+#import <QuartzCore/QuartzCore.h>
+
 /*
  These definitions are the default values if the settings a settings file is not assigned
  */
 
-static NSString * const kNewsletterInviteBackgroundCustomImageName = @"newsletter_background_custom_sample";
-static NSString * const kNewsletterInviteCustomImageName = @"newsletter_invite_custom_sample";
+//static NSString * const kNewsletterInviteBackgroundCustomImageName = @"newsletter_background_custom_sample";
+//static NSString * const kNewsletterInviteCustomImageName = @"newsletter_invite_custom_sample";
 
 static const BOOL kNewsletterMailchimpDoubleOptIn = NO;
 static const BOOL kNewsletterInviteIgnoreCancel = NO;
@@ -63,7 +65,6 @@ static const CGFloat kNewsletterCopyFormMarginPhone4 = 0;
 static const CGFloat kNewsletterTableViewWidthRatioPad = 0.75;
 static const CGFloat kNewsletterTableViewWidthRatioPhone = 0.90;
 
-static const CGFloat kNewsletterInviteTopMarginPad = 150;
 static const CGFloat kNewsletterInviteTopMarginPhone35 = 50;
 static const CGFloat kNewsletterInviteTopMarginPhone4 = 75;
 
@@ -113,6 +114,9 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
 @property (nonatomic, strong) UIView *coverView;
 @property (nonatomic, strong) UITableView *tableView;
 
+@property (nonatomic, strong) UIButton *dismissButton;
+// It's possible to use a tap gesture recognizer on the view, but then it would be triggered when tapping inside of the invite view and not only around it.
+
 @end
 
 @implementation LSNewsletterInvite
@@ -154,7 +158,7 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
                 if(settings) {
                     invite.settings = settings;
                 }
-
+                
                 [viewController presentNewsletterInvite:invite];
                 
             }
@@ -163,7 +167,7 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
         
         [[NSUserDefaults standardUserDefaults] setInteger:launchCount forKey:kNewsletterInviteAppLaunchCountKey];
         [[NSUserDefaults standardUserDefaults] synchronize];
-    }    
+    }
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -172,7 +176,7 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
     if (self) {
         //TODO: If coverImage text is nil, add a simple dark background view
         
-        NSString *backgroundCustomImageName = kNewsletterInviteBackgroundCustomImageName;
+        NSString *backgroundCustomImageName;
         
         if(self.settings) {
             if([self.settings.inviteBackgroundCustomImageName length] > 0) {
@@ -190,7 +194,7 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
             
         } else {
             self.coverView = [[UIView alloc] initWithFrame:[UIScreen mainScreen].applicationFrame];
-            self.coverView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:1];
+            self.coverView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:.8];
         }
         
     }
@@ -200,8 +204,13 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    // The dismiss button takes up the entire screen behind the table view. If the user taps anyhere outside of the invite it will trigger a dismiss.
+    UIView *rootView = UIApplication.sharedApplication.delegate.window.rootViewController.view;
+    CGRect viewFrame;
+    viewFrame = CGRectMake(0, 0, rootView.bounds.size.width, rootView.bounds.size.height);
     
+    self.view.frame = viewFrame;
+    self.coverView.frame = viewFrame;
+        
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(keyboardWillHide:)
                                                  name:UIKeyboardWillHideNotification
@@ -218,61 +227,36 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
         ignoreCancel = self.settings.ignoreCancel;
     }
     
+    // The dismiss button takes up the entire screen behind the table view. If the user taps anyhere outside of the invite it will trigger a dismiss.
+
     if(!ignoreCancel) {
+        // Tap gesture method
+        // UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget: self action:@selector(dismiss)];
+        // singleTap.numberOfTapsRequired = 1;
+        // [singleTap setCancelsTouchesInView:NO];
+        // [self.coverView addGestureRecognizer:singleTap];
+
         
-        UIButton *dismissButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        dismissButton.frame = self.view.frame;
-        [dismissButton addTarget:self action:@selector(dismiss) forControlEvents:UIControlEventTouchUpInside];
-        [self.view addSubview:dismissButton];
-        
+        self.dismissButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        self.dismissButton.frame = self.view.frame;
+        [self.dismissButton addTarget:self action:@selector(dismiss) forControlEvents:UIControlEventTouchUpInside];
+        [self.view addSubview:self.dismissButton];
+
     }
-    
-    CGFloat tableViewWidthRatioPad = kNewsletterTableViewWidthRatioPad;
-    CGFloat tableViewWidthRatioPhone = kNewsletterTableViewWidthRatioPhone;
-    
-    if(self.settings) {
-        if(self.settings.tableViewWidthRatioPad) {
-            tableViewWidthRatioPad = self.settings.tableViewWidthRatioPad;
-        }
-        if(self.settings.tableViewWidthRatioPhone) {
-            tableViewWidthRatioPhone = self.settings.tableViewWidthRatioPhone;
-        }
-    }
-    
-    CGFloat widthRatio = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? tableViewWidthRatioPad : tableViewWidthRatioPhone;
     
     // The tableview's height is dynamically set to be the minimum height necessary to display all of the info set up in the header file.
+    UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
     
-    self.tableView = [[UITableView alloc] initWithFrame:CGRectMake((1-widthRatio) * self.view.bounds.size.width / 2, 0, widthRatio * self.view.bounds.size.width, self.view.bounds.size.height) style:UITableViewStyleGrouped];
+    self.tableView = [[UITableView alloc] initWithFrame:[self tableViewFrameForInterfaceOrientation:orientation] style:UITableViewStyleGrouped];
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     self.tableView.clipsToBounds = NO;
     self.tableView.scrollEnabled = NO;
+    
+    self.tableView.layer.cornerRadius = 6; // if you like rounded corners
+    
     [self.view addSubview:self.tableView];
-    
-    NSString *customInviteImageName = kNewsletterInviteCustomImageName;
-    
-    if(self.settings) {
-        if([self.settings.inviteCustomImageName length] > 0) {
-            customInviteImageName = self.settings.inviteCustomImageName;
-        }
-    }
-    
-    UIView *backgroundView = [[UIView alloc] init];
-    
-    if([customInviteImageName length] > 0) {
-        UIImage *customInviteImage = [UIImage imageNamed:customInviteImageName];
-        UIImageView *imageView = [[UIImageView alloc] initWithImage:customInviteImage];
-        imageView.frame = CGRectMake((self.tableView.frame.size.width - customInviteImage.size.width)/2, 0, customInviteImage.size.width, customInviteImage.size.height);
-        
-        backgroundView.backgroundColor = [UIColor clearColor];
-        [self.tableView setBackgroundView:backgroundView];
-        
-        [self.tableView.backgroundView addSubview:imageView];
-    } else {
-        backgroundView.backgroundColor = [UIColor whiteColor];
-        [self.tableView setBackgroundView:backgroundView];
-    }
+    [self.tableView setBackgroundView:[self viewBackgroundViewForInterfaceOrientation:orientation]];
     
     self.emailTextField = [[UITextField alloc] initWithFrame:CGRectZero];
     self.emailTextField.keyboardType = UIKeyboardTypeEmailAddress;
@@ -346,13 +330,13 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
     switch ([indexPath section]) {
         case TableViewTitleSection: {
             NSString *titleCustomImageName = kNewsletterInviteTitleCustomImage;
-
+            
             if(self.settings) {
                 if([self.settings.inviteTitleCustomImage length] > 0) {
                     titleCustomImageName = self.settings.inviteTitleCustomImage;
                 }
             }
-
+            
             if ([titleCustomImageName length] > 0) {
                 UIImage *titleCustomImage = [UIImage imageNamed:titleCustomImageName];
                 
@@ -522,14 +506,10 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
     
     if([indexPath section] == (TableViewSectionCount - 1)) {
         
-        CGFloat topMarginPad = kNewsletterInviteTopMarginPad;
         CGFloat topMarginPhone35 = kNewsletterInviteTopMarginPhone35;
         CGFloat topMarginPhone4 = kNewsletterInviteTopMarginPhone4;
         
         if(self.settings) {
-            if(self.settings.topMarginPad > 0) {
-                topMarginPad = self.settings.topMarginPad;
-            }
             if(self.settings.topMarginPhone35 > 0) {
                 topMarginPhone35 = self.settings.topMarginPhone35;
             }
@@ -537,8 +517,15 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
                 topMarginPhone4 = self.settings.topMarginPhone4;
             }
         }
+        CGFloat topMargin = 0;
         
-        CGFloat topMargin = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? topMarginPad : (IS_IPHONE_5) ? topMarginPhone4 : topMarginPhone35;
+        UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
+        if (UIInterfaceOrientationIsLandscape(orientation)) {
+            topMargin = (self.view.frame.size.height - [self tableView:tableView heightAfterIndexPath:indexPath]) / 2;
+        } else {
+            topMargin = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? (self.view.frame.size.height - [self tableView:tableView heightAfterIndexPath:indexPath]) / 2 : (IS_IPHONE_5) ? topMarginPhone4 : topMarginPhone35;
+        }
+
         self.tableView.frame = CGRectMake(self.tableView.frame.origin.x, topMargin, self.tableView.frame.size.width, [self tableView:tableView heightAfterIndexPath:indexPath]);
     }
 }
@@ -548,7 +535,7 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
     // This is height AFTER index path, it adds in the last heightForRowAtIndexPath to the height of all visibleCells
     
     CGFloat height = 0;
-    CGFloat margin = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? 20 : 20;
+    CGFloat margin = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? 20 : 15;
     for (UITableViewCell *cell in [self.tableView visibleCells]) {
         height += cell.frame.size.height;
     }
@@ -561,7 +548,7 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
     // This is height BEFORE index path, it only adds each cell's height that isn't beyond the given index path
     
     CGFloat height = 0;
-    CGFloat margin = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? 20 : 20;
+    CGFloat margin = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? 20 : 15;
     for (int s = 0; s <= indexPath.section; s++) {
         for (int r = 0; r < [self tableView:tableView numberOfRowsInSection:s]; r++) {
             if(s == indexPath.section) {
@@ -576,7 +563,7 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
         }
     }
     
-    CGFloat total = height + (margin * (indexPath.section + 1));
+    CGFloat total = height + (margin * (indexPath.section + 2));
     return total;
 }
 
@@ -607,7 +594,7 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
                 UIImage *titleCustomImage = [UIImage imageNamed:titleCustomImageName];
                 UIImageView *titleImageView = [[UIImageView alloc] initWithImage:titleCustomImage];
                 
-                CGFloat margins = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? 60 : 20;
+                CGFloat margins = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? 60 : 15;
                 
                 titleImageView.frame = CGRectMake(((tableView.frame.size.width - margins) - titleCustomImage.size.width) / 2,
                                                   0, titleCustomImage.size.width, titleCustomImage.size.height);
@@ -664,7 +651,7 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
                         UIImage *firstCopyCustomImage = [UIImage imageNamed:firstCopyCustomImageName];
                         UIImageView *firstCopyImageView = [[UIImageView alloc] initWithImage:firstCopyCustomImage];
                         
-                        CGFloat margins = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? 60 : 20;
+                        CGFloat margins = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? 60 : 15;
                         
                         firstCopyImageView.frame = CGRectMake(((tableView.frame.size.width - margins) - firstCopyCustomImage.size.width) / 2,
                                                               0, firstCopyCustomImage.size.width, firstCopyCustomImage.size.height);
@@ -718,7 +705,7 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
                         UIImage *secondCopyCustomImage = [UIImage imageNamed:secondCopyCustomImageName];
                         UIImageView *secondCopyImageView = [[UIImageView alloc] initWithImage:secondCopyCustomImage];
                         
-                        CGFloat margins = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? 60 : 20;
+                        CGFloat margins = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? 60 : 15;
                         
                         secondCopyImageView.frame = CGRectMake(((tableView.frame.size.width - margins) - secondCopyCustomImage.size.width) / 2,
                                                                0, secondCopyCustomImage.size.width, secondCopyCustomImage.size.height);
@@ -786,7 +773,7 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
             UIImage *submitButtonImage = [UIImage imageNamed:@"submit_button"];
             [self.subscribeButton setImage:submitButtonImage forState:UIControlStateNormal];
             
-            CGFloat margins = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? 60 : 20;
+            CGFloat margins = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? 60 : 15;
             self.subscribeButton.frame = CGRectMake(((tableView.frame.size.width - margins) - submitButtonImage.size.width) / 2,
                                                     0, submitButtonImage.size.width, submitButtonImage.size.height);
             [self.subscribeButton addTarget:self action:@selector(subscribe) forControlEvents:UIControlEventTouchUpInside];
@@ -800,6 +787,93 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
     }
     
     return cell;
+}
+
+#pragma mark - Rotation Methods
+
+- (CGRect)tableViewFrameForInterfaceOrientation:(UIInterfaceOrientation)orientation {
+    
+    CGFloat tableViewWidthRatioPad = kNewsletterTableViewWidthRatioPad;
+    CGFloat tableViewWidthRatioPhone = kNewsletterTableViewWidthRatioPhone;
+    
+    if(self.settings) {
+        if(self.settings.viewWidthRatioPad) {
+            tableViewWidthRatioPad = self.settings.viewWidthRatioPad;
+        }
+        if(self.settings.viewWidthRatioPhone) {
+            tableViewWidthRatioPhone = self.settings.viewWidthRatioPhone;
+        }
+    }
+    
+    CGFloat widthRatio = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? tableViewWidthRatioPad : tableViewWidthRatioPhone;
+    return CGRectMake((1-widthRatio) * self.view.bounds.size.width / 2, 0, widthRatio * self.view.bounds.size.width, self.view.bounds.size.height);
+}
+
+- (UIView *)viewBackgroundViewForInterfaceOrientation:(UIInterfaceOrientation)orientation {
+    
+    NSString *customInviteImageName;
+    
+    if(self.settings) {
+        if([self.settings.inviteCustomImageName length] > 0) {
+            customInviteImageName = self.settings.inviteCustomImageName;
+        }
+    }
+    
+    UIView *backgroundView = [[UIView alloc] initWithFrame:self.tableView.frame];
+    
+    if([customInviteImageName length] > 0) {
+        UIImage *customInviteImage = [UIImage imageNamed:customInviteImageName];
+        UIImageView *imageView = [[UIImageView alloc] initWithImage:customInviteImage];
+        imageView.frame = CGRectMake((self.tableView.frame.size.width - customInviteImage.size.width)/2, 0, customInviteImage.size.width, customInviteImage.size.height);
+        
+        backgroundView.backgroundColor = [UIColor clearColor];
+        [self.tableView setBackgroundView:backgroundView];
+        
+        [self.tableView.backgroundView addSubview:imageView];
+    } else {
+        backgroundView.backgroundColor = [UIColor whiteColor];
+        backgroundView.layer.cornerRadius = 6; // if you like rounded corners
+    }
+    
+    return backgroundView;
+    
+}
+
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+    
+    UIView *rootView = UIApplication.sharedApplication.delegate.window.rootViewController.view;
+    CGRect viewFrame;
+    viewFrame = CGRectMake(0, 0, rootView.bounds.size.width, rootView.bounds.size.height);
+    
+    self.view.frame = viewFrame;
+    self.coverView.frame = viewFrame;
+    self.dismissButton.frame = viewFrame;
+    
+    UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
+    
+    CGRect frame = [self tableViewFrameForInterfaceOrientation:orientation];
+    self.tableView.frame = frame;
+    self.tableView.backgroundView = [self viewBackgroundViewForInterfaceOrientation:orientation];
+    [self.tableView reloadData];
+    
+}
+
+- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+    
+    CGFloat statusHeight = 0;
+    if (![UIApplication sharedApplication].statusBarHidden) {
+        statusHeight = 20;
+    }
+    
+    UIView *rootView = UIApplication.sharedApplication.delegate.window.rootViewController.view;
+    CGRect viewFrame;
+    
+    CGFloat longestSide = MAX(rootView.bounds.size.height, rootView.bounds.size.width);
+    viewFrame = CGRectMake(0, 0, longestSide + statusHeight, longestSide + statusHeight);
+    
+    self.view.frame = viewFrame;
+    self.coverView.frame = viewFrame;
+    
 }
 
 #pragma mark - Table view delegate
@@ -822,8 +896,16 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
     [UIView animateWithDuration:animationDuration animations:^{
         CGFloat height = [self tableView:self.tableView heightUpToIndexPath:[NSIndexPath indexPathForRow:0 inSection:TableViewFormSection]];
         
-        CGFloat requiredSpace = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? 520 : (IS_IPHONE_5) ? 195 : 140;
+        UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
+        CGFloat requiredSpace;
+        if (UIInterfaceOrientationIsLandscape(orientation)) {
+            requiredSpace = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? 140 : (IS_IPHONE_5) ? 90 : 90;
+        } else {
+            requiredSpace = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? 520 : (IS_IPHONE_5) ? 195 : 140;
+        }
+        
         CGFloat offset = MIN(requiredSpace - height, self.tableView.frame.origin.y);
+        
         self.tableView.frame = CGRectMake(self.tableView.frame.origin.x,
                                           offset, self.tableView.frame.size.width, self.tableView.frame.size.height);
     }];
@@ -838,14 +920,10 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
     [animationDurationValue getValue:&animationDuration];
     [UIView animateWithDuration:animationDuration animations:^{
         
-        CGFloat topMarginPad = kNewsletterInviteTopMarginPad;
         CGFloat topMarginPhone35 = kNewsletterInviteTopMarginPhone35;
         CGFloat topMarginPhone4 = kNewsletterInviteTopMarginPhone4;
         
         if(self.settings) {
-            if(self.settings.topMarginPad > 0) {
-                topMarginPad = self.settings.topMarginPad;
-            }
             if(self.settings.topMarginPhone35 > 0) {
                 topMarginPhone35 = self.settings.topMarginPhone35;
             }
@@ -853,9 +931,15 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
                 topMarginPhone4 = self.settings.topMarginPhone4;
             }
         }
+        CGFloat topMargin;
         
-        CGFloat topMargin = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? topMarginPad : (IS_IPHONE_5) ? topMarginPhone4 : topMarginPhone35;
-        
+        UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
+        if (UIInterfaceOrientationIsLandscape(orientation)) {
+            topMargin = (self.view.frame.size.height - self.tableView.frame.size.height) / 2;
+        } else {
+            topMargin = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? (self.view.frame.size.height - self.tableView.frame.size.height) / 2 : (IS_IPHONE_5) ? topMarginPhone4 : topMarginPhone35;
+        }
+                
         self.tableView.frame = CGRectMake(self.tableView.frame.origin.x, topMargin, self.tableView.frame.size.width, self.tableView.frame.size.height);
         
     }];
@@ -866,13 +950,11 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
         [self.nameTextField becomeFirstResponder];
     } else if (textField == self.nameTextField) {
         
-        // The return button on the text fields will cycle through name and email until the string in the email textfield is an email, then it will submit.
-        
+        // The return button on the text fields will cycle through name and email until the string in the email textfield is an email, then it will submit.        
+        [self.nameTextField resignFirstResponder];
+
         if(self.subscribeButton.enabled) {
-            [self.nameTextField resignFirstResponder];
             [self subscribe];
-        } else {
-            [self.emailTextField becomeFirstResponder];
         }
     }
     
@@ -971,6 +1053,7 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
     } else {
         [self.viewController dismissNewsletterInvite:self];
     }
+    
 }
 
 @end
@@ -997,34 +1080,32 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
 	[rootView addSubview:coverView];
 	[rootView addSubview:modalView];
 	
-    [UIView beginAnimations:nil context:nil];
-	[UIView setAnimationDuration:0.6];
-	
-	modalView.frame = viewFrame;
-	coverView.alpha = 1.0;
-    
-	[UIView commitAnimations];
+    [UIView animateWithDuration:0.6 animations:^{
+        
+        modalView.frame = viewFrame;
+        coverView.alpha = 1.0;
+        
+    }];
     
 }
 
 -(void)dismissNewsletterInvite:(LSNewsletterInvite*)newsletterInvite {
-	double animationDelay = 0.7;
 	UIView* modalView = newsletterInvite.view;
 	UIView* coverView = newsletterInvite.coverView;
     
-	[UIView beginAnimations:nil context:(__bridge void *)(modalView)];
-	[UIView setAnimationDuration:animationDelay];
-	[UIView setAnimationDelegate:self];
-	[UIView setAnimationDidStopSelector:@selector(dismissSemiModalViewControllerEnded:finished:context:)];
-	
-    modalView.center = self.offscreenCenter;
-	coverView.alpha = 0.0f;
+    [UIView animateWithDuration:0.6 animations:^{
+        
+        modalView.center = self.offscreenCenter;
+        coverView.alpha = 0.0f;
+        
+    } completion:^(BOOL finished) {
+        
+        [coverView removeFromSuperview];
+        [modalView removeFromSuperview];
+        [newsletterInvite removeFromParentViewController];
+        
+    }];
     
-	[UIView commitAnimations];
-    
-	[coverView performSelector:@selector(removeFromSuperview) withObject:nil afterDelay:animationDelay];
-    
-    [newsletterInvite removeFromParentViewController];
 }
 
 -(CGPoint) offscreenCenter {
