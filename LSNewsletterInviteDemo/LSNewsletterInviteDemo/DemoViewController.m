@@ -33,6 +33,12 @@
 
 - (void)newsletterSignupSuccessful:(NSNotification *)notification {
 
+    NSDictionary *userInfo = notification.userInfo;
+    NSString *email = [userInfo objectForKey:kEmailKey];
+    NSLog(@"Email: %@",email);
+    NSString *name = [userInfo objectForKey:kNameKey];
+    NSLog(@"Name: %@",name);
+    
 }
 
 - (void)presentNewsletter {
@@ -53,8 +59,10 @@
      */
     
     [self presentNewsletterInvite:newsletterInvite];
-
 }
+
+#pragma mark - LMANewsletterViewControllerDelegate
+
 
 - (void)newsletterInviteDidFinish:(LSNewsletterInvite *)newsletterInvite {
     [self dismissNewsletterInvite:newsletterInvite];
