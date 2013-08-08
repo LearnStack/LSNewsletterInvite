@@ -45,7 +45,7 @@ As of version 0.6 the settings of the view controller can be updated by creating
 Example Implementations
 =======================
 
-<img style="float:left;" hspace="30" width="200" src="https://raw.github.com/LearnStack/LSNewsletterInvite/master/LSNewsletterInviteDemo/LSNewsletterInviteDemo/Sample%20Images/Example-Default.png" alt="Default Image"> <img style="float:left;" hspace="30" width="200" src="https://raw.github.com/LearnStack/LSNewsletterInvite/master/LSNewsletterInviteDemo/LSNewsletterInviteDemo/Sample%20Images/Example-Rise.png" alt="Sunrise Image">  <img style="float:left;" hspace="30" width="200" src="https://raw.github.com/LearnStack/LSNewsletterInvite/master/LSNewsletterInviteDemo/LSNewsletterInviteDemo/Sample%20Images/Example-Kids-Game.png" alt="Kids Game Image">
+<img style="float:left;" hspace="20" width="200" src="https://raw.github.com/LearnStack/LSNewsletterInvite/master/LSNewsletterInviteDemo/LSNewsletterInviteDemo/Sample%20Images/Example-Default.png" alt="Default Image"> <img style="float:left;" hspace="20" width="200" src="https://raw.github.com/LearnStack/LSNewsletterInvite/master/LSNewsletterInviteDemo/LSNewsletterInviteDemo/Sample%20Images/Example-Rise.png" alt="Sunrise Image">  <img style="float:left;" hspace="20" width="200" src="https://raw.github.com/LearnStack/LSNewsletterInvite/master/LSNewsletterInviteDemo/LSNewsletterInviteDemo/Sample%20Images/Example-Kids-Game.png" alt="Kids Game Image">
 
 License
 =======
