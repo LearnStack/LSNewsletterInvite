@@ -37,6 +37,9 @@
 		4F4E7B1616F7C66000663707 /* submit_button@2x~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 4F4E7B1016F7C66000663707 /* submit_button@2x~ipad.png */; };
 		4F4E7B1716F7C66000663707 /* submit_button@2x~iphone.png in Resources */ = {isa = PBXBuildFile; fileRef = 4F4E7B1116F7C66000663707 /* submit_button@2x~iphone.png */; };
 		4F4E7B2816F7C6ED00663707 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F4E7B2716F7C6ED00663707 /* QuartzCore.framework */; };
+		4F97E83D17B40EDC00773372 /* Example-Kids-Game.png in Resources */ = {isa = PBXBuildFile; fileRef = 4F97E83A17B40EDC00773372 /* Example-Kids-Game.png */; };
+		4F97E83E17B40EDC00773372 /* Example-Rise.png in Resources */ = {isa = PBXBuildFile; fileRef = 4F97E83B17B40EDC00773372 /* Example-Rise.png */; };
+		4F97E83F17B40EDC00773372 /* Example-Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 4F97E83C17B40EDC00773372 /* Example-Default.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -79,6 +82,9 @@
 		4F4E7B1016F7C66000663707 /* submit_button@2x~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "submit_button@2x~ipad.png"; sourceTree = "<group>"; };
 		4F4E7B1116F7C66000663707 /* submit_button@2x~iphone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "submit_button@2x~iphone.png"; sourceTree = "<group>"; };
 		4F4E7B2716F7C6ED00663707 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		4F97E83A17B40EDC00773372 /* Example-Kids-Game.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Example-Kids-Game.png"; sourceTree = "<group>"; };
+		4F97E83B17B40EDC00773372 /* Example-Rise.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Example-Rise.png"; sourceTree = "<group>"; };
+		4F97E83C17B40EDC00773372 /* Example-Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Example-Default.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -197,6 +203,9 @@
 		4F4E7B0B16F7C66000663707 /* Sample Images */ = {
 			isa = PBXGroup;
 			children = (
+				4F97E83A17B40EDC00773372 /* Example-Kids-Game.png */,
+				4F97E83B17B40EDC00773372 /* Example-Rise.png */,
+				4F97E83C17B40EDC00773372 /* Example-Default.png */,
 				4F4E7B0C16F7C66000663707 /* newsletter_background_custom_sample@2x~ipad.png */,
 				4F4E7B0D16F7C66000663707 /* newsletter_background_custom_sample@2x~iphone.png */,
 				4F4E7B0E16F7C66000663707 /* newsletter_invite_custom_sample@2x~ipad.png */,
@@ -244,6 +253,11 @@
 			attributes = {
 				LastUpgradeCheck = 0460;
 				ORGANIZATIONNAME = LearnStack;
+				TargetAttributes = {
+					4F4E7ADF16F7C58300663707 = {
+						DevelopmentTeam = 969L5L5G9L;
+					};
+				};
 			};
 			buildConfigurationList = 4F4E7ADB16F7C58300663707 /* Build configuration list for PBXProject "LSNewsletterInviteDemo" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -286,6 +300,9 @@
 				4F350B1016F7CA100002AA89 /* Icon-72.png in Resources */,
 				4F350B1216F7CA130002AA89 /* Icon-72@2x.png in Resources */,
 				4F350B2116F7CC8B0002AA89 /* SVProgressHUD.bundle in Resources */,
+				4F97E83D17B40EDC00773372 /* Example-Kids-Game.png in Resources */,
+				4F97E83E17B40EDC00773372 /* Example-Rise.png in Resources */,
+				4F97E83F17B40EDC00773372 /* Example-Default.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -381,10 +398,13 @@
 		4F4E7AFE16F7C58300663707 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LSNewsletterInviteDemo/LSNewsletterInviteDemo-Prefix.pch";
 				INFOPLIST_FILE = "LSNewsletterInviteDemo/LSNewsletterInviteDemo-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -392,10 +412,13 @@
 		4F4E7AFF16F7C58300663707 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LSNewsletterInviteDemo/LSNewsletterInviteDemo-Prefix.pch";
 				INFOPLIST_FILE = "LSNewsletterInviteDemo/LSNewsletterInviteDemo-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
