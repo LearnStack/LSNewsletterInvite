@@ -47,8 +47,4 @@ License
 Copyright 2013 [LearnStack]
 This library is distributed under the terms of MIT/X11
 
-Known Issues
-============
-- Doesn't work in Landscape
-
 [LearnStack]: http://learnstack.com
