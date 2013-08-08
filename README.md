@@ -5,6 +5,12 @@ LSNewsletterInvite is a simple newsletter invite popup that works with MailChimp
 
 You can drop LSNewsletterInvite into any iPhone or iPad app (iOS 5.0 or later) and it will give your users a simple and enticing path to sign up for your newsletter. This code is released under MIT/X11, so feel free to modify and share your changes.
 
+Examples
+=======================
+
+<img style="float:left;" hspace="20" width="200" src="https://raw.github.com/LearnStack/LSNewsletterInvite/master/LSNewsletterInviteDemo/LSNewsletterInviteDemo/Sample%20Images/Example-Default.png" alt="Default Image"> <img style="float:left;" hspace="20" width="200" src="https://raw.github.com/LearnStack/LSNewsletterInvite/master/LSNewsletterInviteDemo/LSNewsletterInviteDemo/Sample%20Images/Example-Rise.png" alt="Sunrise Image">  <img style="float:left;" hspace="20" width="200" src="https://raw.github.com/LearnStack/LSNewsletterInvite/master/LSNewsletterInviteDemo/LSNewsletterInviteDemo/Sample%20Images/Example-Kids-Game.png" alt="Kids Game Image">
+
+
 What makes LSNewsletterInvite better?
 =====================================
 
@@ -41,11 +47,6 @@ Better Settings
 ===============
 
 As of version 0.6 the settings of the view controller can be updated by creating an instance of LSNewsletterInviteSettings and updating the properties of that object, then assigning it in the 'appLaunched' method or as the 'settings' property of an LSNewsletterInvite object you initialized yourself.
-
-Example Implementations
-=======================
-
-<img style="float:left;" hspace="20" width="200" src="https://raw.github.com/LearnStack/LSNewsletterInvite/master/LSNewsletterInviteDemo/LSNewsletterInviteDemo/Sample%20Images/Example-Default.png" alt="Default Image"> <img style="float:left;" hspace="20" width="200" src="https://raw.github.com/LearnStack/LSNewsletterInvite/master/LSNewsletterInviteDemo/LSNewsletterInviteDemo/Sample%20Images/Example-Rise.png" alt="Sunrise Image">  <img style="float:left;" hspace="20" width="200" src="https://raw.github.com/LearnStack/LSNewsletterInvite/master/LSNewsletterInviteDemo/LSNewsletterInviteDemo/Sample%20Images/Example-Kids-Game.png" alt="Kids Game Image">
 
 License
 =======
