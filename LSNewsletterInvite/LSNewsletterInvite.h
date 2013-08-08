@@ -55,6 +55,7 @@ static NSString * const kNameKey = @"name";
  presentation conditions are met. If they are, it will present it
  */
 
++ (void)appLaunched:(BOOL)canPromptForNewsletter viewController:(UIViewController*)viewController;
 + (void)appLaunched:(BOOL)canPromptForNewsletter viewController:(UIViewController*)viewController andSettings:(LSNewsletterInviteSettings *)settings;
 
 @end

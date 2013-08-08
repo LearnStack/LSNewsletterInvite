@@ -34,9 +34,6 @@
  These definitions are the default values if the settings a settings file is not assigned
  */
 
-//static NSString * const kNewsletterInviteBackgroundCustomImageName = @"newsletter_background_custom_sample";
-//static NSString * const kNewsletterInviteCustomImageName = @"newsletter_invite_custom_sample";
-
 static const BOOL kNewsletterMailchimpDoubleOptIn = NO;
 static const BOOL kNewsletterInviteIgnoreCancel = NO;
 
@@ -120,6 +117,10 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
 @end
 
 @implementation LSNewsletterInvite
+
++ (void)appLaunched:(BOOL)canPromptForNewsletter viewController:(UIViewController*)viewController {
+    [LSNewsletterInvite appLaunched:canPromptForNewsletter viewController:viewController andSettings:nil];
+}
 
 + (void)appLaunched:(BOOL)canPromptForNewsletter viewController:(UIViewController*)viewController andSettings:(LSNewsletterInviteSettings *)settings {
     
