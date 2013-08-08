@@ -42,6 +42,11 @@ Better Settings
 
 As of version 0.6 the settings of the view controller can be updated by creating an instance of LSNewsletterInviteSettings and updating the properties of that object, then assigning it in the 'appLaunched' method or as the 'settings' property of an LSNewsletterInvite object you initialized yourself.
 
+Example Implementations
+=======================
+
+<img style="float:left;" hspace="30" width="200" src="https://raw.github.com/LearnStack/LSNewsletterInvite/master/LSNewsletterInviteDemo/LSNewsletterInviteDemo/Sample%20Images/Example-Default.png" alt="Default Image"> <img style="float:left;" hspace="30" width="200" src="https://raw.github.com/LearnStack/LSNewsletterInvite/master/LSNewsletterInviteDemo/LSNewsletterInviteDemo/Sample%20Images/Example-Rise.png" alt="Sunrise Image">  <img style="float:left;" hspace="30" width="200" src="https://raw.github.com/LearnStack/LSNewsletterInvite/master/LSNewsletterInviteDemo/LSNewsletterInviteDemo/Sample%20Images/Example-Kids-Game.png" alt="Kids Game Image">
+
 License
 =======
 Copyright 2013 [LearnStack]
