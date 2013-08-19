@@ -87,8 +87,8 @@ static NSString * const kNameKey = @"name";
 
 @interface UIViewController (NewsletterInvite)
 
--(void)presentNewsletterInvite:(LSNewsletterInvite*)newsletterInvite;
--(void)dismissNewsletterInvite:(LSNewsletterInvite*)newsletterInvite;
+- (void)presentNewsletterInvite:(LSNewsletterInvite*)newsletterInvite;
+- (void)dismissNewsletterInvite:(LSNewsletterInvite*)newsletterInvite;
 
 @end
 
