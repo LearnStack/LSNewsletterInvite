@@ -38,6 +38,12 @@
 
 @property (nonatomic, assign) BOOL mailchimpDoubleOptIn;
 
+// If you set these programmatically, then you don't have to store them in your Info.plist file.
+
+@property (nonatomic, strong) NSString *mailchimpAPIKey;
+@property (nonatomic, strong) NSString *mailchimpListIDKey;
+@property (nonatomic, strong) NSArray *mailchimpGroups;
+
 /*
  The title of your invite, font sizes for iPhone and iPad are included in the settings file
  

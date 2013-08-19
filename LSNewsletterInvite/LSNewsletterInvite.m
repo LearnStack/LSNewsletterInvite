@@ -31,7 +31,7 @@
 #import <QuartzCore/QuartzCore.h>
 
 /*
- These definitions are the default values if the settings a settings file is not assigned
+ These definitions are the default values if a settings file is not assigned.
  */
 
 static const BOOL kNewsletterMailchimpDoubleOptIn = NO;
@@ -973,15 +973,27 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
 - (void)subscribe {
     [self.view endEditing:YES];
     
-    NSDictionary* mailChimpInfo = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"MailChimp"];
-    NSString *mailChimpAPIKey = [mailChimpInfo objectForKey:@"MailChimpAPIKey"];
-    NSString *mailChimpListIDKey = [mailChimpInfo objectForKey:@"MailChimpListID"];
-    
-    NSArray *mailChimpGroups = [mailChimpInfo objectForKey:@"MailChimpGroups"];
+	// Try to get MailChip values from settings object.
+    NSString *mailChimpAPIKey = self.settings.mailchimpAPIKey;
+    NSString *mailChimpListIDKey = self.settings.mailchimpListIDKey;
+    NSArray *mailChimpGroups = self.settings.mailchimpGroups;
+	
+	// If the MailChimp values were not found in settings, try to get them from the main bundle's info dictionary.
+	NSDictionary* mailChimpInfo = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"MailChimp"];
+	if (mailChimpInfo) {
+		if (!mailChimpAPIKey) {
+			mailChimpAPIKey = [mailChimpInfo objectForKey:@"MailChimpAPIKey"];
+		}
+		if (!mailChimpListIDKey) {
+			mailChimpListIDKey = [mailChimpInfo objectForKey:@"MailChimpListID"];
+		}
+		if (!mailChimpGroups) {
+			mailChimpGroups = [mailChimpInfo objectForKey:@"MailChimpGroups"];
+		}
+	}
     
     BOOL mailChimpDoubleOptIn = kNewsletterMailchimpDoubleOptIn;
-    
-    if(self.settings) {
+    if (self.settings) {
         mailChimpDoubleOptIn = self.settings.mailchimpDoubleOptIn;
     }
     
