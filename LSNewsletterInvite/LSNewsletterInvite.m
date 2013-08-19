@@ -1017,7 +1017,7 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
     // If your NewsletterMailChimpGroup is set to @"" it will skip this section. You can group your email signups by app which allows for more control over your mailing schedules. This is not important to some developers.
     
     if([mailChimpGroups count] > 0) {
-        NSMutableArray *groupings = [NSArray arrayWithArray:mailChimpGroups];
+        NSArray *groupings = [NSArray arrayWithArray:mailChimpGroups];
         [mergeVars setValue:groupings forKey:@"GROUPINGS"];
     }
     
