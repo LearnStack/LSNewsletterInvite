@@ -255,6 +255,7 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
     self.tableView.scrollEnabled = NO;
     
     self.tableView.layer.cornerRadius = 6; // if you like rounded corners
+	self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     
     [self.view addSubview:self.tableView];
     [self.tableView setBackgroundView:[self viewBackgroundViewForInterfaceOrientation:orientation]];
@@ -326,7 +327,7 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    // Table view cell heights are dynaimcally set based on settins in the header.
+    // Table view cell heights are dynaimcally set based on settings in the header.
     
     switch ([indexPath section]) {
         case TableViewTitleSection: {
@@ -455,9 +456,11 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
         case TableViewFormSection:
             return 44;
             break;
-        case TableViewSubmitButtonSection:
-            return 44;
+        case TableViewSubmitButtonSection: {
+			UIImage *image = [UIImage imageNamed:@"submit_button"];
+            return image.size.height;
             break;
+		}
     }
     return 0;
 }
@@ -751,6 +754,7 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
             switch (indexPath.row) {
                 case 0:
                     cell.textLabel.text = @"Email";
+					cell.textLabel.textAlignment = NSTextAlignmentCenter;
                     self.emailTextField.frame = CGRectMake(0,
                                                            0,
                                                            tableView.bounds.size.width - (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad ? 200.0f : 100.0f),
@@ -759,6 +763,7 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
                     break;
                 case 1:
                     cell.textLabel.text = @"Name";
+					cell.textLabel.textAlignment = NSTextAlignmentCenter;
                     self.nameTextField.frame = CGRectMake(0,
                                                           0,
                                                           tableView.bounds.size.width - (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad ? 200.0f : 100.0f),
@@ -774,11 +779,11 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
             UIImage *submitButtonImage = [UIImage imageNamed:@"submit_button"];
             [self.subscribeButton setImage:submitButtonImage forState:UIControlStateNormal];
             
-            CGFloat margins = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? 60 : 15;
-            self.subscribeButton.frame = CGRectMake(((tableView.frame.size.width - margins) - submitButtonImage.size.width) / 2,
-                                                    0, submitButtonImage.size.width, submitButtonImage.size.height);
-            [self.subscribeButton addTarget:self action:@selector(subscribe) forControlEvents:UIControlEventTouchUpInside];
-            [cell.contentView addSubview:self.subscribeButton];
+			// Center button within cell bounds.
+			self.subscribeButton.frame = CGRectMake(((tableView.frame.size.width - submitButtonImage.size.width) / 2),
+													0, submitButtonImage.size.width, submitButtonImage.size.height);
+			[self.subscribeButton addTarget:self action:@selector(subscribe) forControlEvents:UIControlEventTouchUpInside];
+			[cell addSubview:self.subscribeButton];
             
             cell.backgroundColor = [UIColor clearColor];
             cell.backgroundView = [[UIView alloc] initWithFrame:CGRectZero];
