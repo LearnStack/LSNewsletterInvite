@@ -52,6 +52,10 @@ static const CGFloat kNewsletterInviteFirstCopyFontSizePhone = 14;
 static NSString * const kNewsletterInviteSecondCopy = @"We'd love to stay in touch for support, tips, and offers on all of our apps.";
 static NSString * const kNewsletterInviteSecondCopyCustomImage = @"";
 
+static NSString * const kNewsletterInviteSubmitButtonColor = @"3e8acc";
+static const CGFloat kNewsletterInviteSubmitButtonWidth = 156;
+static const CGFloat kNewsletterInviteSubmitButtonHeight = 44;
+
 static const CGFloat kNewsletterInviteSecondCopyFontSizePad = 30;
 static const CGFloat kNewsletterInviteSecondCopyFontSizePhone = 14;
 
@@ -310,8 +314,8 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
     } else {
         
         self.subscribeButton.enabled = NO;
-        self.subscribeButton.alpha = 0.75;
-        
+        self.subscribeButton.alpha = 0.33;
+
     }
     
 }
@@ -457,8 +461,21 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
             return 44;
             break;
         case TableViewSubmitButtonSection: {
-			UIImage *image = [UIImage imageNamed:@"submit_button"];
-            return image.size.height;
+
+            if (self.settings) {
+                if ([self.settings.submitButtonCustomImage length] > 0) {
+                    UIImage *image = [UIImage imageNamed:self.settings.submitButtonCustomImage];
+                    return image.size.height;
+                } else {
+                    if (self.settings.submitButtonHeight > 0) {
+                        return self.settings.submitButtonHeight;
+                    } else {
+                        return kNewsletterInviteSubmitButtonHeight;
+                    }
+                }
+            } else {
+                return kNewsletterInviteSubmitButtonHeight;
+            }
             break;
 		}
     }
@@ -779,12 +796,28 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
         case TableViewSubmitButtonSection: {
             
             self.subscribeButton = [UIButton buttonWithType:UIButtonTypeCustom];
-            UIImage *submitButtonImage = [UIImage imageNamed:@"submit_button"];
-            [self.subscribeButton setImage:submitButtonImage forState:UIControlStateNormal];
+            [self.subscribeButton setTitle:@"Submit" forState:UIControlStateNormal];
             
-			// Center button within cell bounds.
-			self.subscribeButton.frame = CGRectMake(((tableView.frame.size.width - submitButtonImage.size.width) / 2),
-													0, submitButtonImage.size.width, submitButtonImage.size.height);
+            if (self.settings) {
+                if ([self.settings.submitButtonCustomImage length] > 0) {
+                    UIImage *submitButtonImage = [UIImage imageNamed:self.settings.submitButtonCustomImage];
+                    [self.subscribeButton setImage:submitButtonImage forState:UIControlStateNormal];
+                    
+                    // Center button within cell bounds.
+                    self.subscribeButton.frame = CGRectMake(((tableView.frame.size.width - submitButtonImage.size.width) / 2),
+                                                            0, submitButtonImage.size.width, submitButtonImage.size.height);
+
+                } else {
+                    if ([self.settings.submitButtonText length] > 0) {
+                        [self.subscribeButton setTitle:self.settings.submitButtonText forState:UIControlStateNormal];
+                    }
+                    
+                    [self setSubscribeButtonStyleForTableView:tableView];
+                }
+            } else {
+                [self setSubscribeButtonStyleForTableView:tableView];
+            }
+            
 			[self.subscribeButton addTarget:self action:@selector(subscribe) forControlEvents:UIControlEventTouchUpInside];
 			[cell addSubview:self.subscribeButton];
             
@@ -796,6 +829,35 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
     }
     
     return cell;
+}
+
+- (void)setSubscribeButtonStyleForTableView:(UITableView *)tableView {
+
+    if (self.settings) {
+        if ([self.settings.submitButtonColorHex length] > 0) {
+            self.subscribeButton.backgroundColor = [LSNewsletterInvite colorFromHexString:self.settings.submitButtonColorHex];
+        } else {
+            self.subscribeButton.backgroundColor = [LSNewsletterInvite colorFromHexString:kNewsletterInviteSubmitButtonColor];
+        }
+    }
+    
+    CGFloat width = kNewsletterInviteSubmitButtonWidth;
+    CGFloat height = kNewsletterInviteSubmitButtonHeight;
+    
+    if (self.settings) {
+        if (self.settings.submitButtonWidth > 0) {
+            width = self.settings.submitButtonWidth;
+        }
+        if (self.settings.submitButtonHeight > 0) {
+            height = self.settings.submitButtonHeight;
+        }
+    }
+    
+    // Center button within cell bounds.
+    self.subscribeButton.frame = CGRectMake(((tableView.frame.size.width - width) / 2),
+                                            0, width, height);
+    
+    self.subscribeButton.layer.cornerRadius = 6; // if you like rounded corners
 }
 
 #pragma mark - Rotation Methods
@@ -1075,6 +1137,14 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
         [self.viewController dismissNewsletterInvite:self];
     }
     
+}
+
++ (UIColor *)colorFromHexString:(NSString *)hexString {
+    unsigned rgbValue = 0;
+    NSScanner *scanner = [NSScanner scannerWithString:hexString];
+    [scanner setScanLocation:1]; // bypass '#' character
+    [scanner scanHexInt:&rgbValue];
+    return [UIColor colorWithRed:((rgbValue & 0xFF0000) >> 16)/255.0 green:((rgbValue & 0xFF00) >> 8)/255.0 blue:(rgbValue & 0xFF)/255.0 alpha:1.0];
 }
 
 @end

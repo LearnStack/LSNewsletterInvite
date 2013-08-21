@@ -103,6 +103,16 @@
 @property (nonatomic, assign) CGFloat copyFormMarginPhone4;
 
 /*
+ You can use a custom image for your submit button. If there is a custom image, it will not use the text.
+ */
+
+@property (nonatomic, strong) NSString *submitButtonText;
+@property (nonatomic, strong) NSString *submitButtonColorHex; // Include # (i.e. #999999)
+@property (nonatomic, strong) NSString *submitButtonCustomImage;
+@property (nonatomic, assign) CGFloat submitButtonWidth;
+@property (nonatomic, assign) CGFloat submitButtonHeight;
+
+/*
  The width of the view is dependant on you. You can make it the full width of the view, or a portion.
  The dismiss button is behind the view. If you make the view the full width, you will be effectively
  disabling the dismiss button.
