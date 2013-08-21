@@ -130,6 +130,14 @@
 @property (nonatomic, assign) CGFloat topMarginPhone4;
 
 /*
+ If you'd like to turn off rounded corners, set the bool to YES.
+ This setting allows you to set a custom value for the corner radius.
+ */
+
+@property (nonatomic, assign) BOOL roundedCornersOff;
+@property (nonatomic, assign) CGFloat roundedCornerRadius;
+
+/*
  You can set the required launch count for the invite to be presented. I prefer to display it after the first launch.
  However, if you have something like GameCenter/Gree in the app, you may want to display it on the second launch so that
  the user doesn't get overwhelmed.

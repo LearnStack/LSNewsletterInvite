@@ -258,7 +258,18 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
     self.tableView.clipsToBounds = NO;
     self.tableView.scrollEnabled = NO;
     
-    self.tableView.layer.cornerRadius = 6; // if you like rounded corners
+    if (self.settings) {
+        if (!self.settings.roundedCornersOff) {
+            if (self.settings.roundedCornerRadius > 0) {
+                self.tableView.layer.cornerRadius = self.settings.roundedCornerRadius;
+            } else {
+                self.tableView.layer.cornerRadius = 6; // if you like rounded corners
+            }
+        }
+    } else {
+        self.tableView.layer.cornerRadius = 6; // if you like rounded corners
+    }
+    
 	self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     
     [self.view addSubview:self.tableView];
@@ -857,7 +868,18 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
     self.subscribeButton.frame = CGRectMake(((tableView.frame.size.width - width) / 2),
                                             0, width, height);
     
-    self.subscribeButton.layer.cornerRadius = 6; // if you like rounded corners
+    if (self.settings) {
+        if (!self.settings.roundedCornersOff) {
+            if (self.settings.roundedCornerRadius > 0) {
+                self.subscribeButton.layer.cornerRadius = self.settings.roundedCornerRadius;
+            } else {
+                self.subscribeButton.layer.cornerRadius = 6; // if you like rounded corners
+            }
+        }
+    } else {
+        self.subscribeButton.layer.cornerRadius = 6; // if you like rounded corners
+    }
+    
 }
 
 #pragma mark - Rotation Methods
@@ -903,7 +925,18 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
         [self.tableView.backgroundView addSubview:imageView];
     } else {
         backgroundView.backgroundColor = [UIColor whiteColor];
-        backgroundView.layer.cornerRadius = 6; // if you like rounded corners
+        
+        if (self.settings) {
+            if (!self.settings.roundedCornersOff) {
+                if (self.settings.roundedCornerRadius > 0) {
+                    backgroundView.layer.cornerRadius = self.settings.roundedCornerRadius;
+                } else {
+                    backgroundView.layer.cornerRadius = 6; // if you like rounded corners
+                }
+            }
+        } else {
+            backgroundView.layer.cornerRadius = 6; // if you like rounded corners
+        }
     }
     
     return backgroundView;
