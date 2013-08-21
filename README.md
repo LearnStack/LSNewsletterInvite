@@ -48,6 +48,13 @@ Better Settings
 
 As of version 0.6 the settings of the view controller can be updated by creating an instance of LSNewsletterInviteSettings and updating the properties of that object, then assigning it in the 'appLaunched' method or as the 'settings' property of an LSNewsletterInvite object you initialized yourself.
 
+Contributors
+============
+
+- Joshua Howland ([jkhowland](https://github.com/jkhowland))
+- Dan Reese ([dreese](https://github.com/dreese))
+- Hilton Campbell ([hiltonc](https://github.com/hiltonc))
+
 License
 =======
 Copyright 2013 [LearnStack]
