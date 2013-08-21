@@ -504,8 +504,8 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
     }
 }
 
-- (void) tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
-{
+-(void) tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+    
     // This method captures the last section and row, and then updates the table view size to fit to the height of all visible cells.
     
     if ([indexPath section] == (TableViewSectionCount - 1)) {
@@ -538,12 +538,15 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
     
     // This is height AFTER index path, it adds in the last heightForRowAtIndexPath to the height of all visibleCells
     
-    CGFloat height = 0;
+    CGFloat maxY = 0;
     CGFloat margin = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? 20 : 15;
+    
     for (UITableViewCell *cell in [self.tableView visibleCells]) {
-        height += cell.frame.size.height;
+        maxY = MAX(maxY,CGRectGetMaxY(cell.frame));
     }
-    CGFloat total = height + [self tableView:tableView heightForRowAtIndexPath:indexPath] + (margin * (TableViewSectionCount + 2));
+    
+    CGFloat cellHeight2 = [self tableView:tableView heightForRowAtIndexPath:indexPath];
+    CGFloat total = maxY + cellHeight2 + (margin * (TableViewSectionCount));
     return total;
 }
 
