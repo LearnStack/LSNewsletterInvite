@@ -34,7 +34,7 @@
  These definitions are the default values if a settings file is not assigned.
  */
 
-static const BOOL kNewsletterMailchimpDoubleOptIn = NO;
+static const BOOL kNewsletterMailchimpDoubleOptIn = YES;
 static const BOOL kNewsletterInviteIgnoreCancel = NO;
 
 static NSString * const kNewsletterInviteTitle = @"Sign Up Today!";
