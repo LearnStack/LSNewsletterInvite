@@ -22,13 +22,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#import "LSNewsletterInvite.h"
-#import "SVProgressHUD.h"
-#import "ChimpKit.h"
-
-#import "LSNewsletterInviteSettings.h"
-
+#import <SVProgressHUD/SVProgressHUD.h>
+#import <ChimpKit/ChimpKit.h>
 #import <QuartzCore/QuartzCore.h>
+
+#import "LSNewsletterInvite.h"
+#import "LSNewsletterInviteSettings.h"
 
 /*
  These definitions are the default values if a settings file is not assigned.

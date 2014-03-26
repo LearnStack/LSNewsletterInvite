@@ -1,6 +1,0 @@
-[submodule "External/ChimpKit"]
-	path = External/ChimpKit
-	url = https://github.com/mailchimp/ChimpKit2.git
-[submodule "External/SVProgressHUD"]
-	path = External/SVProgressHUD
-	url = https://github.com/samvermette/SVProgressHUD.git

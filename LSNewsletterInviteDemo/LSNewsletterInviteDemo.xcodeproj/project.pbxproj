@@ -7,15 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		4F0082AB1731BBBF00D6239F /* LSNewsletterInvite.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F0082AA1731BBBF00D6239F /* LSNewsletterInvite.m */; };
-		4F0082AD1731BBFF00D6239F /* LSNewsletterInviteSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F0082AC1731BBFF00D6239F /* LSNewsletterInviteSettings.m */; };
 		4F350B0C16F7C9FF0002AA89 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 4F350B0B16F7C9FF0002AA89 /* Icon.png */; };
 		4F350B0E16F7CA040002AA89 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4F350B0D16F7CA040002AA89 /* Icon@2x.png */; };
 		4F350B1016F7CA100002AA89 /* Icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = 4F350B0F16F7CA100002AA89 /* Icon-72.png */; };
 		4F350B1216F7CA130002AA89 /* Icon-72@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4F350B1116F7CA130002AA89 /* Icon-72@2x.png */; };
-		4F350B1A16F7CC6D0002AA89 /* ChimpKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F350B1516F7CC6D0002AA89 /* ChimpKit.m */; };
-		4F350B2116F7CC8B0002AA89 /* SVProgressHUD.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 4F350B1E16F7CC8B0002AA89 /* SVProgressHUD.bundle */; };
-		4F350B2216F7CC8B0002AA89 /* SVProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F350B2016F7CC8B0002AA89 /* SVProgressHUD.m */; };
 		4F4E7AE416F7C58300663707 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F4E7AE316F7C58300663707 /* UIKit.framework */; };
 		4F4E7AE616F7C58300663707 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F4E7AE516F7C58300663707 /* Foundation.framework */; };
 		4F4E7AE816F7C58300663707 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F4E7AE716F7C58300663707 /* CoreGraphics.framework */; };
@@ -43,19 +38,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		4F00829B1731AE4100D6239F /* LSNewsletterInviteSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSNewsletterInviteSettings.h; sourceTree = "<group>"; };
-		4F0082AA1731BBBF00D6239F /* LSNewsletterInvite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSNewsletterInvite.m; sourceTree = "<group>"; };
-		4F0082AC1731BBFF00D6239F /* LSNewsletterInviteSettings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSNewsletterInviteSettings.m; sourceTree = "<group>"; };
 		4F350B0B16F7C9FF0002AA89 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Icon.png; path = ../Icon.png; sourceTree = "<group>"; };
 		4F350B0D16F7CA040002AA89 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon@2x.png"; path = "../Icon@2x.png"; sourceTree = "<group>"; };
 		4F350B0F16F7CA100002AA89 /* Icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-72.png"; path = "../Icon-72.png"; sourceTree = "<group>"; };
 		4F350B1116F7CA130002AA89 /* Icon-72@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-72@2x.png"; path = "../Icon-72@2x.png"; sourceTree = "<group>"; };
-		4F350B1416F7CC6D0002AA89 /* ChimpKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChimpKit.h; sourceTree = "<group>"; };
-		4F350B1516F7CC6D0002AA89 /* ChimpKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChimpKit.m; sourceTree = "<group>"; };
-		4F350B1E16F7CC8B0002AA89 /* SVProgressHUD.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = SVProgressHUD.bundle; sourceTree = "<group>"; };
-		4F350B1F16F7CC8B0002AA89 /* SVProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SVProgressHUD.h; sourceTree = "<group>"; };
-		4F350B2016F7CC8B0002AA89 /* SVProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SVProgressHUD.m; sourceTree = "<group>"; };
-		4F350B2416F8C0D50002AA89 /* LSNewsletterInvite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSNewsletterInvite.h; sourceTree = "<group>"; };
 		4F4E7AE016F7C58300663707 /* LSNewsletterInviteDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LSNewsletterInviteDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4F4E7AE316F7C58300663707 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		4F4E7AE516F7C58300663707 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -102,39 +88,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		4F350B1316F7CC6D0002AA89 /* ChimpKit */ = {
-			isa = PBXGroup;
-			children = (
-				4F350B1416F7CC6D0002AA89 /* ChimpKit.h */,
-				4F350B1516F7CC6D0002AA89 /* ChimpKit.m */,
-			);
-			name = ChimpKit;
-			path = ../External/ChimpKit/Core/Classes;
-			sourceTree = "<group>";
-		};
-		4F350B1D16F7CC8B0002AA89 /* SVProgressHUD */ = {
-			isa = PBXGroup;
-			children = (
-				4F350B1E16F7CC8B0002AA89 /* SVProgressHUD.bundle */,
-				4F350B1F16F7CC8B0002AA89 /* SVProgressHUD.h */,
-				4F350B2016F7CC8B0002AA89 /* SVProgressHUD.m */,
-			);
-			name = SVProgressHUD;
-			path = ../External/SVProgressHUD/SVProgressHUD;
-			sourceTree = "<group>";
-		};
-		4F350B2316F8C0D50002AA89 /* LSNewsletterInvite */ = {
-			isa = PBXGroup;
-			children = (
-				4F350B2416F8C0D50002AA89 /* LSNewsletterInvite.h */,
-				4F0082AA1731BBBF00D6239F /* LSNewsletterInvite.m */,
-				4F00829B1731AE4100D6239F /* LSNewsletterInviteSettings.h */,
-				4F0082AC1731BBFF00D6239F /* LSNewsletterInviteSettings.m */,
-			);
-			name = LSNewsletterInvite;
-			path = ../../LSNewsletterInvite;
-			sourceTree = "<group>";
-		};
 		4F4E7AD716F7C58300663707 = {
 			isa = PBXGroup;
 			children = (
@@ -155,7 +108,6 @@
 		4F4E7AE216F7C58300663707 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				4F4E7B1B16F7C68800663707 /* Additional Kits */,
 				4F4E7B2716F7C6ED00663707 /* QuartzCore.framework */,
 				4F4E7AE316F7C58300663707 /* UIKit.framework */,
 				4F4E7AE516F7C58300663707 /* Foundation.framework */,
@@ -171,7 +123,6 @@
 				4F4E7AF316F7C58300663707 /* AppDelegate.m */,
 				4F4E7B0016F7C5B500663707 /* DemoViewController.h */,
 				4F4E7B0116F7C5B500663707 /* DemoViewController.m */,
-				4F350B2316F8C0D50002AA89 /* LSNewsletterInvite */,
 				4F4E7B0B16F7C66000663707 /* Sample Images */,
 				4F4E7AEA16F7C58300663707 /* Supporting Files */,
 			);
@@ -214,15 +165,6 @@
 				4F4E7B1116F7C66000663707 /* submit_button@2x~iphone.png */,
 			);
 			path = "Sample Images";
-			sourceTree = "<group>";
-		};
-		4F4E7B1B16F7C68800663707 /* Additional Kits */ = {
-			isa = PBXGroup;
-			children = (
-				4F350B1D16F7CC8B0002AA89 /* SVProgressHUD */,
-				4F350B1316F7CC6D0002AA89 /* ChimpKit */,
-			);
-			name = "Additional Kits";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -299,7 +241,6 @@
 				4F350B0E16F7CA040002AA89 /* Icon@2x.png in Resources */,
 				4F350B1016F7CA100002AA89 /* Icon-72.png in Resources */,
 				4F350B1216F7CA130002AA89 /* Icon-72@2x.png in Resources */,
-				4F350B2116F7CC8B0002AA89 /* SVProgressHUD.bundle in Resources */,
 				4F97E83D17B40EDC00773372 /* Example-Kids-Game.png in Resources */,
 				4F97E83E17B40EDC00773372 /* Example-Rise.png in Resources */,
 				4F97E83F17B40EDC00773372 /* Example-Default.png in Resources */,
@@ -316,10 +257,6 @@
 				4F4E7AF016F7C58300663707 /* main.m in Sources */,
 				4F4E7AF416F7C58300663707 /* AppDelegate.m in Sources */,
 				4F4E7B0216F7C5B500663707 /* DemoViewController.m in Sources */,
-				4F350B1A16F7CC6D0002AA89 /* ChimpKit.m in Sources */,
-				4F350B2216F7CC8B0002AA89 /* SVProgressHUD.m in Sources */,
-				4F0082AB1731BBBF00D6239F /* LSNewsletterInvite.m in Sources */,
-				4F0082AD1731BBFF00D6239F /* LSNewsletterInviteSettings.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
