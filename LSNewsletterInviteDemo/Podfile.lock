@@ -1,0 +1,16 @@
+PODS:
+  - ChimpKit (3.0.2)
+  - LSNewsletterInvite (0.6):
+    - ChimpKit (~> 3.0.2)
+    - SVProgressHUD (~> 1.0)
+  - SVProgressHUD (1.0)
+
+DEPENDENCIES:
+  - LSNewsletterInvite
+
+SPEC CHECKSUMS:
+  ChimpKit: e3a0677bdc5ba888ab02c0f7994147e6edd36bca
+  LSNewsletterInvite: 1aa9de19873617b08bed604bc42a89ec41d2c277
+  SVProgressHUD: 5e10939a296debf5fe5a5895eda9539b8b2114f1
+
+COCOAPODS: 0.29.0

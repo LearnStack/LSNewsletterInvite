@@ -214,7 +214,7 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
     
     self.view.frame = viewFrame;
     self.coverView.frame = viewFrame;
-    
+        
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(keyboardWillHide:)
                                                  name:UIKeyboardWillHideNotification
@@ -232,20 +232,20 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
     }
     
     // The dismiss button takes up the entire screen behind the table view. If the user taps anyhere outside of the invite it will trigger a dismiss.
-    
+
     if (!ignoreCancel) {
         // Tap gesture method
         // UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget: self action:@selector(dismiss)];
         // singleTap.numberOfTapsRequired = 1;
         // [singleTap setCancelsTouchesInView:NO];
         // [self.coverView addGestureRecognizer:singleTap];
-        
+
         
         self.dismissButton = [UIButton buttonWithType:UIButtonTypeCustom];
         self.dismissButton.frame = self.view.frame;
         [self.dismissButton addTarget:self action:@selector(dismiss) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:self.dismissButton];
-        
+
     }
     
     // The tableview's height is dynamically set to be the minimum height necessary to display all of the info set up in the header file.
@@ -316,7 +316,7 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
 - (void)updateChrome {
     NSString *email = [[self.emailTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] lowercaseString];
     if ([[NSPredicate predicateWithFormat:@"SELF MATCHES %@", kEmailRegex]
-         evaluateWithObject:email]) {
+        evaluateWithObject:email]) {
         
         self.subscribeButton.enabled = YES;
         self.subscribeButton.alpha = 1.0;
@@ -325,7 +325,7 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
         
         self.subscribeButton.enabled = NO;
         self.subscribeButton.alpha = 0.33;
-        
+
     }
     
 }
@@ -471,7 +471,7 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
             return 44;
             break;
         case TableViewSubmitButtonSection: {
-            
+
             if (self.settings) {
                 if ([self.settings.submitButtonCustomImage length] > 0) {
                     UIImage *image = [UIImage imageNamed:self.settings.submitButtonCustomImage];
@@ -556,7 +556,7 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
         } else {
             topMargin = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? (self.view.frame.size.height - [self tableView:tableView heightAfterIndexPath:indexPath]) / 2 : (IS_IPHONE_5) ? topMarginPhone4 : topMarginPhone35;
         }
-        
+
         self.tableView.frame = CGRectMake(self.tableView.frame.origin.x, topMargin, self.tableView.frame.size.width, [self tableView:tableView heightAfterIndexPath:indexPath]);
     }
 }
@@ -816,7 +816,7 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
                     // Center button within cell bounds.
                     self.subscribeButton.frame = CGRectMake(((tableView.frame.size.width - submitButtonImage.size.width) / 2),
                                                             0, submitButtonImage.size.width, submitButtonImage.size.height);
-                    
+
                 } else {
                     if ([self.settings.submitButtonText length] > 0) {
                         [self.subscribeButton setTitle:self.settings.submitButtonText forState:UIControlStateNormal];
@@ -842,7 +842,7 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
 }
 
 - (void)setSubscribeButtonStyleForTableView:(UITableView *)tableView {
-    
+
     if (self.settings) {
         if ([self.settings.submitButtonColorHex length] > 0) {
             self.subscribeButton.backgroundColor = [LSNewsletterInvite colorFromHexString:self.settings.submitButtonColorHex];
@@ -1042,7 +1042,7 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
         } else {
             topMargin = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? (self.view.frame.size.height - self.tableView.frame.size.height) / 2 : (IS_IPHONE_5) ? topMarginPhone4 : topMarginPhone35;
         }
-        
+                
         self.tableView.frame = CGRectMake(self.tableView.frame.origin.x, topMargin, self.tableView.frame.size.width, self.tableView.frame.size.height);
         
     }];
@@ -1053,9 +1053,9 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
         [self.nameTextField becomeFirstResponder];
     } else if (textField == self.nameTextField) {
         
-        // The return button on the text fields will cycle through name and email until the string in the email textfield is an email, then it will submit.
+        // The return button on the text fields will cycle through name and email until the string in the email textfield is an email, then it will submit.        
         [self.nameTextField resignFirstResponder];
-        
+
         if (self.subscribeButton.enabled) {
             [self subscribe];
         }
@@ -1134,7 +1134,7 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
 #pragma mark ChimpKitDelegate
 
 - (void)ckRequestSucceeded:(ChimpKitRequest *)aRequest {
-    
+
     [SVProgressHUD showSuccessWithStatus:@"Subscribed"];
     
     if (_delegate) {
