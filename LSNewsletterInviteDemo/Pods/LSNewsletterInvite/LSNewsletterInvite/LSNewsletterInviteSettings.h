@@ -95,12 +95,24 @@
 @property (nonatomic, strong) NSString *secondCopyCustomImage;
 
 /*
- You can customize the margin between the copy and the form for iPhone and iPad
+ You can customize the margin between each section of the form for iPhone and iPad
  */
 
-@property (nonatomic, assign) CGFloat copyFormMarginPad;
-@property (nonatomic, assign) CGFloat copyFormMarginPhone35;
-@property (nonatomic, assign) CGFloat copyFormMarginPhone4;
+@property (nonatomic, strong) NSNumber *titleTopMarginPad;
+@property (nonatomic, strong) NSNumber *titleTopMarginPhone35;
+@property (nonatomic, strong) NSNumber *titleTopMarginPhone4;
+
+@property (nonatomic, strong) NSNumber *titleCopyMarginPad;
+@property (nonatomic, strong) NSNumber *titleCopyMarginPhone35;
+@property (nonatomic, strong) NSNumber *titleCopyMarginPhone4;
+
+@property (nonatomic, strong) NSNumber *copyFormMarginPad;
+@property (nonatomic, strong) NSNumber *copyFormMarginPhone35;
+@property (nonatomic, strong) NSNumber *copyFormMarginPhone4;
+
+@property (nonatomic, strong) NSNumber *formButtonMarginPad;
+@property (nonatomic, strong) NSNumber *formButtonMarginPhone35;
+@property (nonatomic, strong) NSNumber *formButtonMarginPhone4;
 
 /*
  You can use a custom image for your submit button. If there is a custom image, it will not use the text.
