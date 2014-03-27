@@ -71,6 +71,14 @@ static const CGFloat kNewsletterInviteTopMarginPhone4 = 75;
 static const CGFloat kNewsletterInviteAfterLaunchCount = 0;
 static const CGFloat kNewsletterInviteCount = 2;
 
+static const CGFloat kNewsletterTitleTopMarginPad = 40;
+static const CGFloat kNewsletterTitleTopMarginPhone35 = 20;
+static const CGFloat kNewsletterTitleTopMarginPhone4 = 20;
+
+static const CGFloat kNewsletterSectionMarginPad = 20;
+static const CGFloat kNewsletterSectionMarginPhone35 = 15;
+static const CGFloat kNewsletterSectionMarginPhone4 = 15;
+
 /*
  These keys are used to store invite and launch count in NSUserDefaults
  */
@@ -251,7 +259,7 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
     // The tableview's height is dynamically set to be the minimum height necessary to display all of the info set up in the header file.
     UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
     
-    self.tableView = [[UITableView alloc] initWithFrame:[self tableViewFrameForInterfaceOrientation:orientation] style:UITableViewStyleGrouped];
+    self.tableView = [[UITableView alloc] initWithFrame:[self tableViewFrameForInterfaceOrientation:orientation] style:UITableViewStylePlain];
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     self.tableView.clipsToBounds = NO;
@@ -429,14 +437,14 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
                     CGFloat copyFormMarginPhone4 = kNewsletterCopyFormMarginPhone4;
                     
                     if (self.settings) {
-                        if (self.settings.copyFormMarginPad > 0) {
-                            copyFormMarginPad = self.settings.copyFormMarginPad;
+                        if (self.settings.copyFormMarginPad) {
+                            copyFormMarginPad = [self.settings.copyFormMarginPad floatValue];
                         }
-                        if (self.settings.copyFormMarginPhone35 > 0) {
-                            copyFormMarginPhone35 = self.settings.copyFormMarginPhone35;
+                        if (self.settings.copyFormMarginPhone35) {
+                            copyFormMarginPhone35 = [self.settings.copyFormMarginPhone35 floatValue];
                         }
-                        if (self.settings.copyFormMarginPhone4 > 0) {
-                            copyFormMarginPhone4 = self.settings.copyFormMarginPhone4;
+                        if (self.settings.copyFormMarginPhone4) {
+                            copyFormMarginPhone4 = [self.settings.copyFormMarginPhone4 floatValue];
                         }
                     }
                     
@@ -566,14 +574,18 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
     // This is height AFTER index path, it adds in the last heightForRowAtIndexPath to the height of all visibleCells
     
     CGFloat maxY = 0;
-    CGFloat margin = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? 20 : 15;
+    
+    CGFloat margin = 0;
+    for (NSInteger i = 0; i < TableViewSectionCount; i++) {
+        margin += [self tableView:tableView heightForHeaderInSection:i];
+    }
     
     for (UITableViewCell *cell in [self.tableView visibleCells]) {
         maxY = MAX(maxY,CGRectGetMaxY(cell.frame));
     }
     
     CGFloat cellHeight2 = [self tableView:tableView heightForRowAtIndexPath:indexPath];
-    CGFloat total = maxY + cellHeight2 + (margin * (TableViewSectionCount));
+    CGFloat total = maxY + cellHeight2 + margin;
     return total;
 }
 
@@ -839,6 +851,93 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
     }
     
     return cell;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+    
+    CGFloat marginPad = kNewsletterSectionMarginPad;
+    CGFloat marginPhone35 = kNewsletterSectionMarginPhone35;
+    CGFloat marginPhone4 = kNewsletterSectionMarginPhone4;
+    
+    switch (section) {
+        case TableViewTitleSection:
+            
+            marginPad = kNewsletterTitleTopMarginPad;
+            marginPhone35 = kNewsletterTitleTopMarginPhone35;
+            marginPhone4 = kNewsletterTitleTopMarginPhone4;
+            
+            if (self.settings) {
+                
+                if (self.settings.titleTopMarginPad) {
+                    marginPad = [self.settings.titleTopMarginPad floatValue];
+                }
+                if (self.settings.titleTopMarginPhone4) {
+                    marginPhone4 = [self.settings.titleTopMarginPhone4 floatValue];
+                }
+                if (self.settings.titleTopMarginPhone35) {
+                    marginPhone35 = [self.settings.titleTopMarginPhone35 floatValue];
+                }
+            }
+            
+            break;
+        case TableViewCopySection:
+            
+            if (self.settings) {
+                
+                if (self.settings.titleCopyMarginPad) {
+                    marginPad = [self.settings.titleCopyMarginPad floatValue];
+                }
+                if (self.settings.titleCopyMarginPhone4) {
+                    marginPhone4 = [self.settings.titleCopyMarginPhone4 floatValue];
+                }
+                if (self.settings.titleCopyMarginPhone35) {
+                    marginPhone35 = [self.settings.titleCopyMarginPhone35 floatValue];
+                }
+            }
+            
+            break;
+        case TableViewFormSection:
+            
+            if (self.settings) {
+                
+                if (self.settings.copyFormMarginPad) {
+                    marginPad = [self.settings.copyFormMarginPad floatValue];
+                }
+                if (self.settings.copyFormMarginPhone4) {
+                    marginPhone4 = [self.settings.copyFormMarginPhone4 floatValue];
+                }
+                if (self.settings.copyFormMarginPhone35) {
+                    marginPhone35 = [self.settings.copyFormMarginPhone35 floatValue];
+                }
+            }
+            
+            break;
+        case TableViewSubmitButtonSection:
+            
+            if (self.settings) {
+                
+                if (self.settings.formButtonMarginPad) {
+                    marginPad = [self.settings.formButtonMarginPad floatValue];
+                }
+                if (self.settings.formButtonMarginPhone4) {
+                    marginPhone4 = [self.settings.formButtonMarginPhone4 floatValue];
+                }
+                if (self.settings.formButtonMarginPhone35) {
+                    marginPhone35 = [self.settings.formButtonMarginPhone35 floatValue];
+                }
+            }
+            
+            break;
+    }
+    
+    return (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? marginPad : (IS_IPHONE_5) ? marginPhone4 : marginPhone35;
+    
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+    UIView *view = [UIView new];
+    view.backgroundColor = [UIColor clearColor];
+    return view;
 }
 
 - (void)setSubscribeButtonStyleForTableView:(UITableView *)tableView {
