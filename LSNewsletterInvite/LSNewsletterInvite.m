@@ -287,7 +287,15 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
     self.emailTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
     self.emailTextField.autocorrectionType = UITextAutocorrectionTypeNo;
     self.emailTextField.returnKeyType = UIReturnKeyNext;
-    self.emailTextField.placeholder = @"example@me.com";
+    
+    NSString *emailPlaceholder = @"example@me.com";
+    if (self.settings) {
+        if (self.settings.emailPlaceholder.length > 0) {
+            emailPlaceholder = self.settings.emailPlaceholder;
+        }
+    }
+    
+    self.emailTextField.placeholder = emailPlaceholder;
     self.emailTextField.textColor = RGBCOLOR(50, 79, 133);
     self.emailTextField.delegate = self;
     [self.emailTextField addTarget:self action:@selector(emailTextFieldChanged) forControlEvents:UIControlEventEditingChanged];
@@ -296,7 +304,15 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
     self.nameTextField.keyboardType = UIKeyboardTypeDefault;
     self.nameTextField.autocapitalizationType = UITextAutocapitalizationTypeWords;
     self.nameTextField.returnKeyType = UIReturnKeyNext;
-    self.nameTextField.placeholder = @"optional";
+    
+    NSString *namePlaceholder = @"optional";
+    if (self.settings) {
+        if (self.settings.namePlaceholder.length > 0) {
+            namePlaceholder = self.settings.namePlaceholder;
+        }
+    }
+    
+    self.nameTextField.placeholder = namePlaceholder;
     self.nameTextField.textColor = RGBCOLOR(50, 79, 133);
     self.nameTextField.delegate = self;
     
@@ -794,8 +810,16 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
         }
         case TableViewFormSection:
             switch (indexPath.row) {
-                case 0:
-                    cell.textLabel.text = @"Email";
+                case 0: {
+                    
+                    NSString *text = @"Email";
+                    if (self.settings) {
+                        if (self.settings.emailLabel.length > 0) {
+                            text = self.settings.emailLabel;
+                        }
+                    }
+                    
+                    cell.textLabel.text = text;
 					cell.textLabel.textAlignment = NSTextAlignmentCenter;
                     self.emailTextField.frame = CGRectMake(0,
                                                            0,
@@ -803,8 +827,17 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
                                                            [self.emailTextField sizeThatFits:tableView.bounds.size].height);
                     cell.accessoryView = self.emailTextField;
                     break;
-                case 1:
-                    cell.textLabel.text = @"Name";
+                }
+                case 1: {
+                    
+                    NSString *text = @"Name";
+                    if (self.settings) {
+                        if (self.settings.nameLabel.length > 0) {
+                            text = self.settings.nameLabel;
+                        }
+                    }
+                    
+                    cell.textLabel.text = text;
 					cell.textLabel.textAlignment = NSTextAlignmentCenter;
                     self.nameTextField.frame = CGRectMake(0,
                                                           0,
@@ -812,6 +845,7 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
                                                           [self.nameTextField sizeThatFits:tableView.bounds.size].height);
                     cell.accessoryView = self.nameTextField;
                     break;
+                }
                     
             }
             break;
@@ -1204,7 +1238,7 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
     [params setValue:mailChimpListIDKey forKey:@"id"];
     
     NSString *email = [self.emailTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-    [params setValue:@{@"email":email} forKey:@"email"];
+    [params setValue:email forKey:@"email_address"];
     
     [params setValue:@"false" forKey:@"replace_interests"];
     [params setValue:@"true" forKey:@"update_existing"];
@@ -1226,7 +1260,7 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
     [params setValue:mergeVars forKey:@"merge_vars"];
     
     ChimpKit *ck = [ChimpKit sharedKit];
-    [ck callApiMethod:@"lists/subscribe" withApiKey:mailChimpAPIKey params:params andDelegate:self];
+    [ck callApiMethod:@"listSubscribe" withApiKey:mailChimpAPIKey params:params andDelegate:self];
     
 }
 
