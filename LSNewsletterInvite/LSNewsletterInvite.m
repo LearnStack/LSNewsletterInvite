@@ -1204,7 +1204,7 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
     [params setValue:mailChimpListIDKey forKey:@"id"];
     
     NSString *email = [self.emailTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-    [params setValue:email forKey:@"email_address"];
+    [params setValue:@{@"email":email} forKey:@"email"];
     
     [params setValue:@"false" forKey:@"replace_interests"];
     [params setValue:@"true" forKey:@"update_existing"];
@@ -1226,7 +1226,7 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
     [params setValue:mergeVars forKey:@"merge_vars"];
     
     ChimpKit *ck = [ChimpKit sharedKit];
-    [ck callApiMethod:@"listSubscribe" withApiKey:mailChimpAPIKey params:params andDelegate:self];
+    [ck callApiMethod:@"lists/subscribe" withApiKey:mailChimpAPIKey params:params andDelegate:self];
     
 }
 
