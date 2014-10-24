@@ -9,8 +9,8 @@ DEPENDENCIES:
   - LSNewsletterInvite
 
 SPEC CHECKSUMS:
-  ChimpKit: e3a0677bdc5ba888ab02c0f7994147e6edd36bca
-  LSNewsletterInvite: 1aa9de19873617b08bed604bc42a89ec41d2c277
-  SVProgressHUD: 5e10939a296debf5fe5a5895eda9539b8b2114f1
+  ChimpKit: 23aa5bcd1bdcc45f4bed49f91b56a4c164433e3e
+  LSNewsletterInvite: b51df4ebc3495c08d657797783747fd69d9bdb94
+  SVProgressHUD: 5034c6e22b8c2ca3e09402e48d41ed0340aa1c50
 
-COCOAPODS: 0.29.0
+COCOAPODS: 0.34.4

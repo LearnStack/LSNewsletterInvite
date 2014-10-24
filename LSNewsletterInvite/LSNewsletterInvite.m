@@ -453,14 +453,14 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
                     CGFloat copyFormMarginPhone4 = kNewsletterCopyFormMarginPhone4;
                     
                     if (self.settings) {
-                        if (self.settings.copyFormMarginPad) {
-                            copyFormMarginPad = [self.settings.copyFormMarginPad floatValue];
+                        if (self.settings.formCopyMarginPad) {
+                            copyFormMarginPad = [self.settings.formCopyMarginPad floatValue];
                         }
-                        if (self.settings.copyFormMarginPhone35) {
-                            copyFormMarginPhone35 = [self.settings.copyFormMarginPhone35 floatValue];
+                        if (self.settings.formCopyMarginPhone35) {
+                            copyFormMarginPhone35 = [self.settings.formCopyMarginPhone35 floatValue];
                         }
-                        if (self.settings.copyFormMarginPhone4) {
-                            copyFormMarginPhone4 = [self.settings.copyFormMarginPhone4 floatValue];
+                        if (self.settings.formCopyMarginPhone4) {
+                            copyFormMarginPhone4 = [self.settings.formCopyMarginPhone4 floatValue];
                         }
                     }
                     
@@ -601,7 +601,7 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
     }
     
     CGFloat cellHeight2 = [self tableView:tableView heightForRowAtIndexPath:indexPath];
-    CGFloat total = maxY + cellHeight2 + margin;
+    CGFloat total = maxY + cellHeight2;
     return total;
 }
 
@@ -686,6 +686,7 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
                 
                 cell.textLabel.text = inviteTitle;
                 cell.textLabel.font = [UIFont systemFontOfSize:(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? fontSizePad : fontSizePhone];
+                cell.textLabel.textColor = [UIColor whiteColor];
                 cell.textLabel.textAlignment = NSTextAlignmentCenter;
                 cell.textLabel.numberOfLines = 0;
                 cell.textLabel.lineBreakMode = NSLineBreakByWordWrapping;
@@ -742,6 +743,7 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
                         
                         cell.textLabel.text = inviteFirstCopy;
                         cell.textLabel.font = [UIFont systemFontOfSize:(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? fontSizePad : fontSizePhone];
+                        cell.textLabel.textColor = [UIColor whiteColor];
                         cell.textLabel.textAlignment = NSTextAlignmentCenter;
                         cell.textLabel.numberOfLines = 0;
                         cell.textLabel.lineBreakMode = NSLineBreakByWordWrapping;
@@ -797,6 +799,7 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
                         
                         cell.textLabel.text = inviteSecondCopy;
                         cell.textLabel.font = [UIFont systemFontOfSize:(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? fontSizePad : fontSizePhone];
+                        cell.textLabel.textColor = [UIColor whiteColor];
                         cell.textLabel.textAlignment = NSTextAlignmentCenter;
                         cell.textLabel.numberOfLines = 0;
                         cell.textLabel.lineBreakMode = NSLineBreakByWordWrapping;
@@ -821,6 +824,7 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
                     
                     cell.textLabel.text = text;
 					cell.textLabel.textAlignment = NSTextAlignmentCenter;
+                    cell.textLabel.textColor = [UIColor whiteColor];
                     self.emailTextField.frame = CGRectMake(0,
                                                            0,
                                                            tableView.bounds.size.width - (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad ? 200.0f : 100.0f),
@@ -839,6 +843,8 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
                     
                     cell.textLabel.text = text;
 					cell.textLabel.textAlignment = NSTextAlignmentCenter;
+                    cell.textLabel.textColor = [UIColor whiteColor];
+
                     self.nameTextField.frame = CGRectMake(0,
                                                           0,
                                                           tableView.bounds.size.width - (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad ? 200.0f : 100.0f),
@@ -874,7 +880,7 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
                 [self setSubscribeButtonStyleForTableView:tableView];
             }
             
-			[self.subscribeButton addTarget:self action:@selector(subscribe) forControlEvents:UIControlEventTouchUpInside];
+            [self.subscribeButton addTarget:self action:@selector(subscribe:firstName:) forControlEvents:UIControlEventTouchUpInside];
 			[cell addSubview:self.subscribeButton];
             
             cell.backgroundColor = [UIColor clearColor];
@@ -884,6 +890,7 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
         }
     }
     
+    cell.backgroundColor = [UIColor clearColor];
     return cell;
 }
 
@@ -934,14 +941,14 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
             
             if (self.settings) {
                 
-                if (self.settings.copyFormMarginPad) {
-                    marginPad = [self.settings.copyFormMarginPad floatValue];
+                if (self.settings.formCopyMarginPad) {
+                    marginPad = [self.settings.formCopyMarginPad floatValue];
                 }
-                if (self.settings.copyFormMarginPhone4) {
-                    marginPhone4 = [self.settings.copyFormMarginPhone4 floatValue];
+                if (self.settings.formCopyMarginPhone4) {
+                    marginPhone4 = [self.settings.formCopyMarginPhone4 floatValue];
                 }
-                if (self.settings.copyFormMarginPhone35) {
-                    marginPhone35 = [self.settings.copyFormMarginPhone35 floatValue];
+                if (self.settings.formCopyMarginPhone35) {
+                    marginPhone35 = [self.settings.formCopyMarginPhone35 floatValue];
                 }
             }
             
@@ -1190,7 +1197,7 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
         [self.nameTextField resignFirstResponder];
         
         if (self.subscribeButton.enabled) {
-            [self subscribe];
+            [self subscribe:self.emailTextField.text firstName:self.nameTextField.text];
         }
     }
     
@@ -1205,7 +1212,7 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
 
 #pragma mark - Navigation Item Actions
 
-- (void)subscribe {
+- (void)subscribe:(NSString *)email firstName:(NSString *)firstName {
     [self.view endEditing:YES];
     
 	// Try to get MailChip values from settings object.
@@ -1233,34 +1240,32 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
     }
     
     [SVProgressHUD showWithStatus:@"Subscribing" maskType:SVProgressHUDMaskTypeClear];
+    NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+    [parameters setValue:mailChimpListIDKey forKey:@"id"];
     
-    NSMutableDictionary *params = [NSMutableDictionary dictionary];
-    [params setValue:mailChimpListIDKey forKey:@"id"];
+    NSString *trimmedEmail = [email stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    [parameters setValue:@{@"email": trimmedEmail} forKey:@"email"];
     
-    NSString *email = [self.emailTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-    [params setValue:@{@"email": email} forKey:@"email"];
+    [parameters setValue:@"false" forKey:@"replace_interests"];
+    [parameters setValue:@"true" forKey:@"update_existing"];
     
-    [params setValue:@"false" forKey:@"replace_interests"];
-    [params setValue:@"true" forKey:@"update_existing"];
+    BOOL mailChimpDoubleOptIn = NO;
+    [parameters setValue:[NSNumber numberWithBool:mailChimpDoubleOptIn] forKey:@"double_optin"];
     
     NSMutableDictionary *mergeVars = [NSMutableDictionary dictionary];
-    NSString *name = self.nameTextField.text;
-    if ([name length] > 0) {
-        [mergeVars setValue:name forKey:@"FNAME"];
+    if ([firstName length] > 0) {
+        [mergeVars setValue:firstName forKey:@"FNAME"];
     }
-    
-    // If your NewsletterMailChimpGroup is set to @"" it will skip this section. You can group your email signups by app which allows for more control over your mailing schedules. This is not important to some developers.
     
     if ([mailChimpGroups count] > 0) {
         NSArray *groupings = [NSArray arrayWithArray:mailChimpGroups];
-        [mergeVars setValue:groupings forKey:@"GROUPINGS"];
+        [mergeVars setValue:groupings forKey:@"groupings"];
     }
     
-    [params setValue:[NSNumber numberWithBool:mailChimpDoubleOptIn] forKey:@"double_optin"];
-    [params setValue:mergeVars forKey:@"merge_vars"];
+    [parameters setValue:mergeVars forKey:@"merge_vars"];
     
     ChimpKit *ck = [ChimpKit sharedKit];
-    [ck callApiMethod:@"lists/subscribe" withApiKey:mailChimpAPIKey params:params andDelegate:self];
+    [ck callApiMethod:@"lists/subscribe" withApiKey:mailChimpAPIKey params:parameters andDelegate:self];
     
 }
 
@@ -1270,6 +1275,7 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
     
     [SVProgressHUD showSuccessWithStatus:@"Subscribed"];
     
+    [params setValue:[NSNumber numberWithBool:mailChimpDoubleOptIn] forKey:@"double_optin"];
     if (_delegate) {
         [self.delegate newsletterInviteDidFinish:self];
     } else {

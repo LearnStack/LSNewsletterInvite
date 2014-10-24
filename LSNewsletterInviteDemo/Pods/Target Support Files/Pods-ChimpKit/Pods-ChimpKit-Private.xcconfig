@@ -1,0 +1,5 @@
+#include "Pods-ChimpKit.xcconfig"
+GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1
+HEADER_SEARCH_PATHS = "${PODS_ROOT}/Headers/Build" "${PODS_ROOT}/Headers/Build/ChimpKit" "${PODS_ROOT}/Headers/Public" "${PODS_ROOT}/Headers/Public/ChimpKit" "${PODS_ROOT}/Headers/Public/LSNewsletterInvite" "${PODS_ROOT}/Headers/Public/SVProgressHUD"
+OTHER_LDFLAGS = -ObjC
+PODS_ROOT = ${SRCROOT}

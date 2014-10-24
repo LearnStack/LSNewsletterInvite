@@ -1,1 +1,0 @@
-../../LSNewsletterInvite/LSNewsletterInvite/LSNewsletterInvite.h

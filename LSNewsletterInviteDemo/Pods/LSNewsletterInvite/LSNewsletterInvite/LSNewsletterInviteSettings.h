@@ -114,18 +114,6 @@
 @property (nonatomic, strong) NSNumber *formButtonMarginPhone35;
 @property (nonatomic, strong) NSNumber *formButtonMarginPhone4;
 
-/* 
- 
- You can customize the labels and placeholders of the form
- 
- */
-
-@property (nonatomic, strong) NSString *emailLabel;
-@property (nonatomic, strong) NSString *emailPlaceholder;
-@property (nonatomic, strong) NSString *nameLabel;
-@property (nonatomic, strong) NSString *namePlaceholder;
-
-
 /*
  You can use a custom image for your submit button. If there is a custom image, it will not use the text.
  */

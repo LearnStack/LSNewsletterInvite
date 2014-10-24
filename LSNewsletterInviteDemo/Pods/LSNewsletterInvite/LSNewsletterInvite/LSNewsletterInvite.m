@@ -222,7 +222,7 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
     
     self.view.frame = viewFrame;
     self.coverView.frame = viewFrame;
-        
+    
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(keyboardWillHide:)
                                                  name:UIKeyboardWillHideNotification
@@ -240,20 +240,20 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
     }
     
     // The dismiss button takes up the entire screen behind the table view. If the user taps anyhere outside of the invite it will trigger a dismiss.
-
+    
     if (!ignoreCancel) {
         // Tap gesture method
         // UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget: self action:@selector(dismiss)];
         // singleTap.numberOfTapsRequired = 1;
         // [singleTap setCancelsTouchesInView:NO];
         // [self.coverView addGestureRecognizer:singleTap];
-
+        
         
         self.dismissButton = [UIButton buttonWithType:UIButtonTypeCustom];
         self.dismissButton.frame = self.view.frame;
         [self.dismissButton addTarget:self action:@selector(dismiss) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:self.dismissButton];
-
+        
     }
     
     // The tableview's height is dynamically set to be the minimum height necessary to display all of the info set up in the header file.
@@ -287,15 +287,7 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
     self.emailTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
     self.emailTextField.autocorrectionType = UITextAutocorrectionTypeNo;
     self.emailTextField.returnKeyType = UIReturnKeyNext;
-    
-    NSString *emailPlaceholder = @"example@me.com";
-    if (self.settings) {
-        if (self.settings.emailPlaceholder.length > 0) {
-            emailPlaceholder = self.settings.emailPlaceholder;
-        }
-    }
-    
-    self.emailTextField.placeholder = emailPlaceholder;
+    self.emailTextField.placeholder = @"example@me.com";
     self.emailTextField.textColor = RGBCOLOR(50, 79, 133);
     self.emailTextField.delegate = self;
     [self.emailTextField addTarget:self action:@selector(emailTextFieldChanged) forControlEvents:UIControlEventEditingChanged];
@@ -304,15 +296,7 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
     self.nameTextField.keyboardType = UIKeyboardTypeDefault;
     self.nameTextField.autocapitalizationType = UITextAutocapitalizationTypeWords;
     self.nameTextField.returnKeyType = UIReturnKeyNext;
-    
-    NSString *namePlaceholder = @"optional";
-    if (self.settings) {
-        if (self.settings.namePlaceholder.length > 0) {
-            namePlaceholder = self.settings.namePlaceholder;
-        }
-    }
-    
-    self.nameTextField.placeholder = namePlaceholder;
+    self.nameTextField.placeholder = @"optional";
     self.nameTextField.textColor = RGBCOLOR(50, 79, 133);
     self.nameTextField.delegate = self;
     
@@ -340,7 +324,7 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
 - (void)updateChrome {
     NSString *email = [[self.emailTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] lowercaseString];
     if ([[NSPredicate predicateWithFormat:@"SELF MATCHES %@", kEmailRegex]
-        evaluateWithObject:email]) {
+         evaluateWithObject:email]) {
         
         self.subscribeButton.enabled = YES;
         self.subscribeButton.alpha = 1.0;
@@ -349,7 +333,7 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
         
         self.subscribeButton.enabled = NO;
         self.subscribeButton.alpha = 0.33;
-
+        
     }
     
 }
@@ -495,7 +479,7 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
             return 44;
             break;
         case TableViewSubmitButtonSection: {
-
+            
             if (self.settings) {
                 if ([self.settings.submitButtonCustomImage length] > 0) {
                     UIImage *image = [UIImage imageNamed:self.settings.submitButtonCustomImage];
@@ -580,7 +564,7 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
         } else {
             topMargin = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? (self.view.frame.size.height - [self tableView:tableView heightAfterIndexPath:indexPath]) / 2 : (IS_IPHONE_5) ? topMarginPhone4 : topMarginPhone35;
         }
-
+        
         self.tableView.frame = CGRectMake(self.tableView.frame.origin.x, topMargin, self.tableView.frame.size.width, [self tableView:tableView heightAfterIndexPath:indexPath]);
     }
 }
@@ -810,16 +794,8 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
         }
         case TableViewFormSection:
             switch (indexPath.row) {
-                case 0: {
-                    
-                    NSString *text = @"Email";
-                    if (self.settings) {
-                        if (self.settings.emailLabel.length > 0) {
-                            text = self.settings.emailLabel;
-                        }
-                    }
-                    
-                    cell.textLabel.text = text;
+                case 0:
+                    cell.textLabel.text = @"Email";
 					cell.textLabel.textAlignment = NSTextAlignmentCenter;
                     self.emailTextField.frame = CGRectMake(0,
                                                            0,
@@ -827,17 +803,8 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
                                                            [self.emailTextField sizeThatFits:tableView.bounds.size].height);
                     cell.accessoryView = self.emailTextField;
                     break;
-                }
-                case 1: {
-                    
-                    NSString *text = @"Name";
-                    if (self.settings) {
-                        if (self.settings.nameLabel.length > 0) {
-                            text = self.settings.nameLabel;
-                        }
-                    }
-
-                    cell.textLabel.text = text;
+                case 1:
+                    cell.textLabel.text = @"Name";
 					cell.textLabel.textAlignment = NSTextAlignmentCenter;
                     self.nameTextField.frame = CGRectMake(0,
                                                           0,
@@ -845,7 +812,6 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
                                                           [self.nameTextField sizeThatFits:tableView.bounds.size].height);
                     cell.accessoryView = self.nameTextField;
                     break;
-                }
                     
             }
             break;
@@ -862,7 +828,7 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
                     // Center button within cell bounds.
                     self.subscribeButton.frame = CGRectMake(((tableView.frame.size.width - submitButtonImage.size.width) / 2),
                                                             0, submitButtonImage.size.width, submitButtonImage.size.height);
-
+                    
                 } else {
                     if ([self.settings.submitButtonText length] > 0) {
                         [self.subscribeButton setTitle:self.settings.submitButtonText forState:UIControlStateNormal];
@@ -888,7 +854,7 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-
+    
     CGFloat marginPad = kNewsletterSectionMarginPad;
     CGFloat marginPhone35 = kNewsletterSectionMarginPhone35;
     CGFloat marginPhone4 = kNewsletterSectionMarginPhone4;
@@ -963,7 +929,7 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
             
             break;
     }
-
+    
     return (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? marginPad : (IS_IPHONE_5) ? marginPhone4 : marginPhone35;
     
 }
@@ -975,7 +941,7 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
 }
 
 - (void)setSubscribeButtonStyleForTableView:(UITableView *)tableView {
-
+    
     if (self.settings) {
         if ([self.settings.submitButtonColorHex length] > 0) {
             self.subscribeButton.backgroundColor = [LSNewsletterInvite colorFromHexString:self.settings.submitButtonColorHex];
@@ -1175,7 +1141,7 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
         } else {
             topMargin = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? (self.view.frame.size.height - self.tableView.frame.size.height) / 2 : (IS_IPHONE_5) ? topMarginPhone4 : topMarginPhone35;
         }
-                
+        
         self.tableView.frame = CGRectMake(self.tableView.frame.origin.x, topMargin, self.tableView.frame.size.width, self.tableView.frame.size.height);
         
     }];
@@ -1186,9 +1152,9 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
         [self.nameTextField becomeFirstResponder];
     } else if (textField == self.nameTextField) {
         
-        // The return button on the text fields will cycle through name and email until the string in the email textfield is an email, then it will submit.        
+        // The return button on the text fields will cycle through name and email until the string in the email textfield is an email, then it will submit.
         [self.nameTextField resignFirstResponder];
-
+        
         if (self.subscribeButton.enabled) {
             [self subscribe];
         }
@@ -1238,7 +1204,7 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
     [params setValue:mailChimpListIDKey forKey:@"id"];
     
     NSString *email = [self.emailTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-    [params setValue:email forKey:@"email_address"];
+    [params setValue:@{@"email":email} forKey:@"email"];
     
     [params setValue:@"false" forKey:@"replace_interests"];
     [params setValue:@"true" forKey:@"update_existing"];
@@ -1260,14 +1226,14 @@ static NSString * const kEmailRegex = (@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\
     [params setValue:mergeVars forKey:@"merge_vars"];
     
     ChimpKit *ck = [ChimpKit sharedKit];
-    [ck callApiMethod:@"listSubscribe" withApiKey:mailChimpAPIKey params:params andDelegate:self];
+    [ck callApiMethod:@"lists/subscribe" withApiKey:mailChimpAPIKey params:params andDelegate:self];
     
 }
 
 #pragma mark ChimpKitDelegate
 
 - (void)ckRequestSucceeded:(ChimpKitRequest *)aRequest {
-
+    
     [SVProgressHUD showSuccessWithStatus:@"Subscribed"];
     
     if (_delegate) {

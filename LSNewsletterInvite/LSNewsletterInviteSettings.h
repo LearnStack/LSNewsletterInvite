@@ -106,9 +106,9 @@
 @property (nonatomic, strong) NSNumber *titleCopyMarginPhone35;
 @property (nonatomic, strong) NSNumber *titleCopyMarginPhone4;
 
-@property (nonatomic, strong) NSNumber *copyFormMarginPad;
-@property (nonatomic, strong) NSNumber *copyFormMarginPhone35;
-@property (nonatomic, strong) NSNumber *copyFormMarginPhone4;
+@property (nonatomic, strong) NSNumber *formCopyMarginPad;
+@property (nonatomic, strong) NSNumber *formCopyMarginPhone35;
+@property (nonatomic, strong) NSNumber *formCopyMarginPhone4;
 
 @property (nonatomic, strong) NSNumber *formButtonMarginPad;
 @property (nonatomic, strong) NSNumber *formButtonMarginPhone35;
